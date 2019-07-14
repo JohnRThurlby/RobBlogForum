@@ -11,7 +11,7 @@ if(isset($_POST["Submit"])){
   $Target    = "Uploads/".basename($_FILES["Image"]["name"]);
   $PostText  = $_POST["PostDescription"];
   $Admin = $_SESSION["UserName"];
-  date_default_timezone_set("American/New York");
+  date_default_timezone_set("America/New_York");
   $CurrentTime=time();
   $DateTime=strftime("%B-%d-%Y %H:%M:%S",$CurrentTime);
 

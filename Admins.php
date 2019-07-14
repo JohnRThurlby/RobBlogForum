@@ -10,7 +10,7 @@ if(isset($_POST["Submit"])){
   $Password        = $_POST["Password"];
   $ConfirmPassword = $_POST["ConfirmPassword"];
   $Admin           = $_SESSION["UserName"];
-  date_default_timezone_set("Asia/Karachi");
+  date_default_timezone_set("America/New_York");
   $CurrentTime=time();
   $DateTime=strftime("%B-%d-%Y %H:%M:%S",$CurrentTime);
 

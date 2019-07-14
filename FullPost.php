@@ -7,7 +7,7 @@ if(isset($_POST["Submit"])){
   $Name    = $_POST["CommenterName"];
   $Email   = $_POST["CommenterEmail"];
   $Comment = $_POST["CommenterThoughts"];
-  date_default_timezone_set("Asia/Karachi");
+  date_default_timezone_set("America/New_York");
   $CurrentTime=time();
   $DateTime=strftime("%B-%d-%Y %H:%M:%S",$CurrentTime);
 
@@ -52,10 +52,7 @@ if(isset($_POST["Submit"])){
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-    <script>   
-      $('#year').text(new Date().getFullYear());
-    </script>   <!-- end script -->
-
+    
     <!-- Stylesheets -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
@@ -79,46 +76,44 @@ if(isset($_POST["Submit"])){
 
 <body>
   <!-- NAVBAR -->
-  <div style="height:10px; background:#696f72;"></div>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-          <a href="#" class="navbar-brand"> JOHNRTHURLBY.INFO</a>
-          <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarcollapseCMS">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a href="MyProfile.php" class="nav-link"> <i class="fas fa-user text-success"></i> My Profile</a>
-            </li>
-            <li class="nav-item">
-              <a href="Dashboard.php" class="nav-link">Dashboard</a>
-            </li>
-            <li class="nav-item">
-              <a href="Posts.php" class="nav-link">Posts</a>
-            </li>
-            <li class="nav-item">
-              <a href="Categories.php" class="nav-link">Categories</a>
-            </li>
-            <li class="nav-item">
-              <a href="Admins.php" class="nav-link"><i class="fas fa-tasks"></i> Manage Admins</a>
-            </li>
-            <li class="nav-item">
-              <a href="Comments.php" class="nav-link"><i class="fas fa-comments"></i> Comments</a>
-            </li>
-            <li class="nav-item">
-              <a href="Blog.php?page=1" class="nav-link" target="_blank"><i class="fas fa-blog"></i> Live Blog</a>
-            </li>
-          </ul>
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item"><a href="Logout.php" class="nav-link text-danger">
-              <i class="fas fa-user-times"></i> Logout</a></li>
-          </ul>
+  <div style="height:10px; background:#27aae1;"></div>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a href="#" class="navbar-brand"> JOHNRTHURLBY.INFO</a>
+      <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarcollapseCMS">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a href="Blog.php?page=1" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item">
+          <a href="About.php" class="nav-link">About</a>
+        </li>
+        <li class="nav-item">
+          <a href="Blog.php?page=1" class="nav-link">Blog</a>
+        </li>
+        <li class="nav-item">
+        <a href="Contact.php" class="nav-link"><i class="fas fa-envelope-square"></i> Contact</a>
+        </li>
+        <li class="nav-item">
+          <a href="About.php" class="nav-link">Features</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <form class="form-inline d-none d-sm-block" action="Blog.php">
+          <div class="form-group">
+          <input class="form-control mr-2" type="text" name="Search" placeholder="Search here"value="">
+          <button  class="btn btn-primary" name="SearchButton">Go</button>
           </div>
-        </div>
-      </nav>
-      <div style="height:10px; background:#deebf0;"></div>
-      <!-- NAVBAR END -->
+        </form>
+      </ul>
+      </div>
+    </div>
+  </nav>
+    <div style="height:10px; background:#27aae1;"></div>
+    <!-- NAVBAR END -->
     <!-- HEADER -->
     <div class="container">
       <div class="row mt-4">
@@ -252,7 +247,16 @@ if(isset($_POST["Submit"])){
             <div class="card-body">
               <img src="images/startblog.png" class="d-block img-fluid mb-3" alt="">
               <div class="text-center">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              A blog is a type of website with posts (articles or entries) displayed in reverse chronological order. That is, the most recent posts are at the top.
+
+              Why start a blog?
+              There are many reasons to start a blog. Here are a few popular ones:
+
+              Make money while working from home. Many bloggers make money. It’s hard work, but it’s got low risk, low overhead and low barrier to entry.
+              Build a writing (or speaking) platform. It’s no secret book publishers rarely work with authors who don’t have an online presence. The reason is simple: it’s a lot easier to sell books to people who already know you. A blog is one of the easiest and most effective places to do it.
+              Get more exposure for your existing business or organization. A blog gives anyone, from individuals to large companies, the ability to reach a large number of people at very little cost.
+              Just write. If you want to write, share your story, encourage others and build a community, a blog is a great place to do that.
+              Simply put, a blog is an online home you own and control. Use it to develop the brand or reputation you desire, establish yourself as an authority in your field, connect with customers or find other like-minded people.
               </div>
             </div>
           </div>
@@ -361,8 +365,11 @@ if(isset($_POST["Submit"])){
     </footer> <!-- END FOOTER -->
 
     <div style="height:10px; background:#696f72;"></div>
-        
+    
+    <script>   
+      $('#year').text(new Date().getFullYear());
+    </script>   <!-- end script -->
+
   </body>    <!-- END BODY -->
 </html> <!-- END HTML -->
 
-<?php //require_once("footer.php");?> 
