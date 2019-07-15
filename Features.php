@@ -34,23 +34,56 @@
   <body>
 
     <!-- NAVBAR -->
-    <?php require_once("navbarblog.php");?> 
+    <?php require("navbarblog.php");?> 
   
       <!-- START HEADER -->
       <header class="bg-dark text-white py-5">
         <div class="container">
           <div class="row">
             <div class="col-md-12">
-              <h3 class="text-center"><i  style="color:#696f72;"></i>Experienced and technically sophisticated software engineering professional with a history of promoting work environments dedicated quality, innovation, and stellar customer service. Skilled trainer and project leader, adept at conveying complex technical information to professionals and lay audiences of varying technical knowledge in a clear and understandable manner. Proficient in systems analysis, development, test, and deployment. Broad knowledge and success in engineering development and web creation environments. Possess several professional certifications, including status as AWS Certified Solutions Architect Associate, Developer Associate, and SysOps Administrator Associate.
-              </h3>
+              <h3 class="text-center"><i  style="color:#696f72;"></i>Under construction</h3>
             </div> <!-- END CONTAINER -->
           </div> <!-- END COL -->
         </div> <!-- END ROW -->
       </header> <!-- END HEADER -->
       <div style="height:10px; background:#deebf0;"></div>
-      
-    <!-- FOOTER -->
-    <?php require("footerblog.php");?> 
+      <!-- FOOTER -->
+      <!-- NAVBAR -->
+      <div style="height:10px; background:#696f72;">
+      </div>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+          <a href="#" class="navbar-brand"> JOHNRTHURLBY.INFO</a>
+          <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
+            <span class="navbar-toggler-icon"></span>
+          </button> <!-- END bUTTON -->
+          <div class="collapse navbar-collapse" id="navbarcollapseCMS">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a href="Privacy.php" class="nav-link">Privacy</a>
+              </li> <!-- END PRIVACY ITEM -->
+            </ul> <!-- END UL -->
+            <ul class="navbar-nav ml-auto">
+            </ul> <!-- UL -->
+          </div> <!-- END DIV COLLAPSE -->
+        </div> <!-- END CONTAINER -->
+      </nav> <!-- END HEADER -->
+
+    <footer class="bg-dark text-white">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <p class="lead text-center">John R. Thurlby | <span id="year"></span> &copy; ----All right Reserved.</p>
+          </div> <!-- END COL -->
+        </div> <!-- END ROW -->
+      </div> <!-- END CONTAINER -->
+    </footer> <!-- END FOOTER -->
+
+    <div style="height:10px; background:#696f72;"></div>
+
+    <script>   
+      $('#year').text(new Date().getFullYear());
+    </script>   <!-- end script -->
 
   </body>    <!-- END BODY -->
 </html> <!-- END HTML -->

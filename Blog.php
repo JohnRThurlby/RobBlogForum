@@ -35,45 +35,9 @@
   </head>  <!-- end head -->
 
 <body>
-  <!-- NAVBAR -->
-  <div style="height:10px; background:#27aae1;"></div>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <a href="#" class="navbar-brand"> JOHNRTHURLBY.INFO</a>
-      <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarcollapseCMS">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a href="Blog.php?page=1" class="nav-link">Home</a>
-        </li>
-        <li class="nav-item">
-          <a href="About.php" class="nav-link">About</a>
-        </li>
-        <li class="nav-item">
-          <a href="Blog.php?page=1" class="nav-link">Blog</a>
-        </li>
-        <li class="nav-item">
-        <a href="Contact.php" class="nav-link"><i class="fas fa-envelope-square"></i> Contact</a>
-        </li>
-        <li class="nav-item">
-          <a href="About.php" class="nav-link">Features</a>
-        </li>
-      </ul>
-      <ul class="navbar-nav ml-auto">
-        <form class="form-inline d-none d-sm-block" action="Blog.php">
-          <div class="form-group">
-          <input class="form-control mr-2" type="text" name="Search" placeholder="Search here"value="">
-          <button  class="btn btn-primary" name="SearchButton">Go</button>
-          </div>
-        </form>
-      </ul>
-      </div>
-    </div>
-  </nav>
-    <div style="height:10px; background:#27aae1;"></div>
-    <!-- NAVBAR END -->
+      <!-- NAVBAR -->
+      <?php require_once("navbarblog.php");?> 
+
     <!-- HEADER -->
     <div class="container">
       <div class="row mt-4">
@@ -285,45 +249,10 @@ Simply put, a blog is an online home you own and control. Use it to develop the 
 
     <!-- HEADER END -->
 <br>
+
     <!-- FOOTER -->
-      <!-- NAVBAR -->
-      <div style="height:10px; background:#696f72;">
-      </div>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-          <a href="#" class="navbar-brand"> JOHNRTHURLBY.INFO</a>
-          <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
-            <span class="navbar-toggler-icon"></span>
-          </button> <!-- END bUTTON -->
-          <div class="collapse navbar-collapse" id="navbarcollapseCMS">
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item">
-                <a href="Privacy.php" class="nav-link">Privacy</a>
-              </li> <!-- END PRIVACY ITEM -->
-            </ul> <!-- END UL -->
-            <ul class="navbar-nav ml-auto">
-            </ul> <!-- UL -->
-          </div> <!-- END DIV COLLAPSE -->
-        </div> <!-- END CONTAINER -->
-      </nav> <!-- END HEADER -->
-
-    <footer class="bg-dark text-white">
-      <div class="container">
-        <div class="row">
-          <div class="col">
-            <p class="lead text-center">John R. Thurlby | <span id="year"></span> &copy; ----All right Reserved.</p>
-          </div> <!-- END COL -->
-        </div> <!-- END ROW -->
-      </div> <!-- END CONTAINER -->
-    </footer> <!-- END FOOTER -->
-
-    <div style="height:10px; background:#696f72;"></div>
-
-    <script>   
-      $('#year').text(new Date().getFullYear());
-    </script>   <!-- end script -->
+    <?php require("footerblog.php");?> 
 
   </body>    <!-- END BODY -->
 </html> <!-- END HTML -->
 
-<?php //require_once("footer.php");?> 
