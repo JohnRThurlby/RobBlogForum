@@ -17,6 +17,19 @@ function CheckUserNameExistsOrNot($UserName){
     return false;
   }
 }
+function CheckForumUserNameExistsOrNot($UserName){
+  global $ConnectingDB;
+  $sql    = "SELECT username FROM users WHERE username=:userName";
+  $stmt   = $ConnectingDB->prepare($sql);
+  $stmt->bindValue(':userName',$UserName);
+  $stmt->execute();
+  $Result = $stmt->rowcount();
+  if ($Result==1) {
+    return true;
+  }else {
+    return false;
+  }
+}
 function Login_Attempt($UserName,$Password){
   global $ConnectingDB;
   $sql = "SELECT * FROM admins WHERE username=:userName AND password=:passWord LIMIT 1";

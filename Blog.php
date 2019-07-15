@@ -36,7 +36,7 @@
 
 <body>
       <!-- NAVBAR -->
-      <?php require_once("navbarblog.php");?> 
+      <?php require("navbarblog.php");?> 
 
     <!-- HEADER -->
     <div class="container">
@@ -183,7 +183,7 @@ Simply put, a blog is an online home you own and control. Use it to develop the 
               <h2 class="lead">Sign Up !</h2>
             </div>
             <div class="card-body">
-              <button type="button" class="btn btn-success btn-block text-center text-white mb-4" name="button">Join the Forum</button>
+              <button type="button" class="btn btn-success btn-block text-center text-white mb-4" name="button"><a href="Forumregister.php" class="page-link"></a>Join the Forum</button>
               <button type="button" class="btn btn-danger btn-block text-center text-white mb-4" name="button">Login</button>
               <div class="input-group mb-3">
                 <input type="text" class="form-control" name="" placeholder="Enter your email"value="">
