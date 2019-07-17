@@ -58,7 +58,7 @@ if(isset($_POST["Submit"])){
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <link rel="stylesheet" href="Css/Styles.css">
     
-    <title>John Thurlby Blog</title>
+    <title>John Thurlby Forum</title>
 
   </head>  <!-- end head -->
 <body>
@@ -99,7 +99,7 @@ if(isset($_POST["Submit"])){
       ?>
       <tbody>
         <tr>
-          <td><a style="text-decoration:none;"href="Subtopics.php?id=<?php echo htmlentities($TopicId) ; ?>" target="_blank">  <h6 class="lead"><?php echo htmlentities($TopicName); ?></h6> </a>
+          <td><a style="text-decoration:none;"href="Subtopics.php?id=<?php echo $TopicId; ?>" target="_blank">  <h6 class="lead"><?php echo htmlentities($TopicName); ?></h6> </a>
           <td><?php echo htmlentities($TopicType); ?></td>
 
       </tbody>

@@ -1,6 +1,11 @@
 <?php require_once("Includes/DB.php"); ?>
 <?php require_once("Includes/Functions.php"); ?>
 <?php require_once("Includes/Sessions.php"); ?>
+<?php
+if(isset($_GET["id"])){
+  $SearchQueryParameter = $_GET["id"];}
+  
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -53,7 +58,26 @@
         </thead>
       <?php
       $ConnectingDB;
-      $sql = "SELECT * FROM subtopic ORDER BY subtopic_id asc";
+      if(isset($_GET["id"])){
+        $SearchQueryParameter = $_GET["id"];
+        $sql = "SELECT topic_name FROM topic  WHERE topic_id = $SearchQueryParameter LIMIT 1";
+        $stmt   =  $ConnectingDB->prepare($sql);
+        $stmt   -> execute();
+        $Result = $stmt->rowcount();
+        if( $Result==1 ){
+          while ( $DataRows = $stmt->fetch() ) {
+            $TopicName = $DataRows["topic_name"];
+          } ?>
+          <h3 class="text-center"><?php echo $TopicName; ?></h3>
+        <?php }else {
+          $_SESSION["ErrorMessage"]="Bad Request !!";
+          Redirect_to("Blog.php?page=1");
+        }
+        $sql = "SELECT * FROM subtopic  WHERE topic_id = $SearchQueryParameter ORDER BY subtopic_id asc";
+      }
+      else { 
+        $sql = "SELECT * FROM subtopic ORDER BY subtopic_id asc";
+      }
       $Execute = $ConnectingDB->query($sql);
       while ($DataRows = $Execute->fetch()) {
         $SubTopicId   = $DataRows["subtopic_id"];
@@ -80,22 +104,22 @@
       <form class="" action="Topics.php" method="post">
         <div class="card bg-secondary text-light mb-3">
           <div class="card-header">
-            <h1 class="text-center">Add New Topic</h1>
+            <h1 class="text-center">Add New Sub Topic</h1>
           </div>
           <div class="card-body bg-dark">
             <div class="form-group">
-              <label for="title"> <span class="FieldInfo"> Topic Title: </span></label>
-               <input class="form-control" type="text" name="TopicTitle" id="title" placeholder="Topic Title" value="">
+              <label for="title"> <span class="FieldInfo"> SubTopic Name: </span></label>
+               <input class="form-control" type="text" name="SubTopicName" id="title" placeholder="Sub Topic Name" value="">
             </div>
             <div class="form-group">
-              <label for="title"> <span class="FieldInfo"> Topic Type: </span></label>
-               <input class="form-control" type="text" name="TopicType" id="title" placeholder="Topic Type" value="">
+              <label for="title"> <span class="FieldInfo"> SubTopic Description: </span></label>
+               <input class="form-control" type="text" name="SubTopicDesc" id="title" placeholder="Sub Topic Description" value="">
             </div>
             <div class="row">
               
               <div class="col-lg-6 offset-lg-3 mb-2">
                 <button type="submit" name="Submit" class="btn btn-success btn-block">
-                  <i class="fas fa-check"></i> Add Topic
+                  <i class="fas fa-check"></i> Add SubTopic
                 </button>
               </div>
             </div>
