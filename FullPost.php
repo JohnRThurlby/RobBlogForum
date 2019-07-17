@@ -76,44 +76,8 @@ if(isset($_POST["Submit"])){
 
 <body>
   <!-- NAVBAR -->
-  <div style="height:10px; background:#27aae1;"></div>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <a href="#" class="navbar-brand"> JOHNRTHURLBY.INFO</a>
-      <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarcollapseCMS">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a href="Blog.php?page=1" class="nav-link">Home</a>
-        </li>
-        <li class="nav-item">
-          <a href="About.php" class="nav-link">About</a>
-        </li>
-        <li class="nav-item">
-          <a href="Blog.php?page=1" class="nav-link">Blog</a>
-        </li>
-        <li class="nav-item">
-        <a href="Contact.php" class="nav-link"><i class="fas fa-envelope-square"></i> Contact</a>
-        </li>
-        <li class="nav-item">
-          <a href="About.php" class="nav-link">Features</a>
-        </li>
-      </ul>
-      <ul class="navbar-nav ml-auto">
-        <form class="form-inline d-none d-sm-block" action="Blog.php">
-          <div class="form-group">
-          <input class="form-control mr-2" type="text" name="Search" placeholder="Search here"value="">
-          <button  class="btn btn-primary" name="SearchButton">Go</button>
-          </div>
-        </form>
-      </ul>
-      </div>
-    </div>
-  </nav>
-    <div style="height:10px; background:#27aae1;"></div>
-    <!-- NAVBAR END -->
+  <?php require("navbarblog.php");?> 
+
     <!-- HEADER -->
     <div class="container">
       <div class="row mt-4">
@@ -164,10 +128,10 @@ if(isset($_POST["Submit"])){
             $PostDescription = $DataRows["post"];
           ?>
           <div class="card">
-            <img src="Uploads/<?php echo htmlentities($Image); ?>" style="max-height:450px;" class="img-fluid card-img-top" />
+            <img src="Uploads/<?php echo htmlentities($Image); ?>" style="max-height:300px;" class="img-fluid card-img-top" />
             <div class="card-body">
               <h4 class="card-title"><?php echo htmlentities($PostTitle); ?></h4>
-              <small class="text-muted">Category: <span class="text-dark"> <a href="Blog.php?category=<?php echo htmlentities($Category); ?>"> <?php echo htmlentities($Category); ?> </a></span> & Written by <span class="text-dark"> <a href="Profile.php?username=<?php echo htmlentities($Admin); ?>"> <?php echo htmlentities($Admin); ?></a></span> On <span class="text-dark"><?php echo htmlentities($DateTime); ?></span></small>
+              <small class="text-muted">Category: <span class="text-dark"> <a href="Blog.php?category=<?php echo htmlentities($Category); ?>"> <?php echo htmlentities($Category); ?> </a></span> & Added by <span class="text-dark"> <a href="Profile.php?username=<?php echo htmlentities($Admin); ?>"> <?php echo htmlentities($Admin); ?></a></span> On <span class="text-dark"><?php echo htmlentities($DateTime); ?></span></small>
             <hr>
               <p class="card-text">
                 <?php echo nl2br($PostDescription); ?></p>
@@ -243,41 +207,7 @@ if(isset($_POST["Submit"])){
 
         <!-- Side Area Start -->
         <div class="col-sm-4">
-          <div class="card mt-4">
-            <div class="card-body">
-              <img src="images/startblog.png" class="d-block img-fluid mb-3" alt="">
-              <div class="text-center">
-              A blog is a type of website with posts (articles or entries) displayed in reverse chronological order. That is, the most recent posts are at the top.
-
-              Why start a blog?
-              There are many reasons to start a blog. Here are a few popular ones:
-
-              Make money while working from home. Many bloggers make money. It’s hard work, but it’s got low risk, low overhead and low barrier to entry.
-              Build a writing (or speaking) platform. It’s no secret book publishers rarely work with authors who don’t have an online presence. The reason is simple: it’s a lot easier to sell books to people who already know you. A blog is one of the easiest and most effective places to do it.
-              Get more exposure for your existing business or organization. A blog gives anyone, from individuals to large companies, the ability to reach a large number of people at very little cost.
-              Just write. If you want to write, share your story, encourage others and build a community, a blog is a great place to do that.
-              Simply put, a blog is an online home you own and control. Use it to develop the brand or reputation you desire, establish yourself as an authority in your field, connect with customers or find other like-minded people.
-              </div>
-            </div>
-          </div>
-          <br>
-          <div class="card">
-            <div class="card-header bg-dark text-light">
-              <h2 class="lead">Sign Up !</h2>
-            </div>
-            <div class="card-body">
-              <button type="button" class="btn btn-success btn-block text-center text-white mb-4" name="button">Join the Forum</button>
-              <button type="button" class="btn btn-danger btn-block text-center text-white mb-4" name="button">Login</button>
-              <div class="input-group mb-3">
-                <input type="text" class="form-control" name="" placeholder="Enter your email"value="">
-                <div class="input-group-append">
-                  <button type="button" class="btn btn-primary btn-sm text-center text-white" name="button">Subscribe Now</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <br>
-          <div class="card">
+        <div class="card">
             <div class="card-header bg-primary text-light">
               <h2 class="lead">Categories</h2>
               </div>
@@ -313,14 +243,33 @@ if(isset($_POST["Submit"])){
               <div class="media">
                 <img src="Uploads/<?php echo htmlentities($Image); ?>" class="d-block img-fluid align-self-start"  width="90" height="94" alt="">
                 <div class="media-body ml-2">
-                <a style="text-decoration:none;" href="FullPost.php?id=<?php echo htmlentities($Id) ; ?>" target="_blank">  <h6 class="lead"><?php echo htmlentities($Title); ?></h6> </a>
+                <a style="text-decoration:none;"href="FullPost.php?id=<?php echo htmlentities($Id) ; ?>" target="_blank">  <h6 class="lead"><?php echo htmlentities($Title); ?></h6> </a>
                   <p class="small"><?php echo htmlentities($DateTime); ?></p>
                 </div>
               </div>
               <hr>
               <?php } ?>
             </div>
+          </div>  <!-- END CARD -->
+          <br>
+          <div class="card">
+            <div class="card-header bg-dark text-light">
+              <h2 class="lead text-center">Forum</h2>
+            </div>
+            <div class="card-body">
+              <button type="button" class="btn btn-success btn-block text-center text-white mb-4" name="button"><a href="Forumregister.php" class="page-link"></a>Join the Forum</button>
+              <button type="button" class="btn btn-danger btn-block text-center text-white mb-4" name="button">Login</button>
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" name="" placeholder="Enter your email"value="">
+                <div class="input-group-append">
+                  <button type="button" class="btn btn-primary btn-sm text-center text-white" name="button">Subscribe Now</button>
+                </div>
+              </div>
+            </div>
           </div>
+          <br>
+          
+          
 
         </div>
         <!-- Side Area End -->
@@ -329,42 +278,9 @@ if(isset($_POST["Submit"])){
     </div>
 
     <!-- HEADER END -->
+
     <!-- FOOTER -->
-      <!-- NAVBAR -->
-      <div style="height:10px; background:#696f72;">
-      </div>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-          <a href="#" class="navbar-brand"> JOHNRTHURLBY.INFO</a>
-          <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
-            <span class="navbar-toggler-icon"></span>
-          </button> <!-- END bUTTON -->
-          <div class="collapse navbar-collapse" id="navbarcollapseCMS">
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item">
-                <a href="Contact.php" class="nav-link"><i class="fas fa-envelope-square"></i> Contact</a>
-              </li> <!-- END CONTACT ITEM -->
-              <li class="nav-item">
-                <a href="Privacy.php" class="nav-link">Privacy</a>
-              </li> <!-- END PRIVACY ITEM -->
-            </ul> <!-- END UL -->
-            <ul class="navbar-nav ml-auto">
-            </ul> <!-- UL -->
-          </div> <!-- END DIV COLLAPSE -->
-        </div> <!-- END CONTAINER -->
-      </nav> <!-- END HEADER -->
-
-    <footer class="bg-dark text-white">
-      <div class="container">
-        <div class="row">
-          <div class="col">
-            <p class="lead text-center">John R. Thurlby | <span id="year"></span> &copy; ----All right Reserved.</p>
-          </div> <!-- END COL -->
-        </div> <!-- END ROW -->
-      </div> <!-- END CONTAINER -->
-    </footer> <!-- END FOOTER -->
-
-    <div style="height:10px; background:#696f72;"></div>
+    <?php require("footerblog.php");?> 
     
     <script>   
       $('#year').text(new Date().getFullYear());

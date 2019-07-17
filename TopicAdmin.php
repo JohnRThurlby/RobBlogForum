@@ -6,38 +6,35 @@ $_SESSION["TrackingURL"]=$_SERVER["PHP_SELF"];
  Confirm_Login(); ?>
 <?php
 if(isset($_POST["Submit"])){
-  $Category = $_POST["CategoryTitle"];
+  $Topic = $_POST["TopicTitle"];
+  $Type  = $_POST["TopicType"];
   $Admin = $_SESSION["UserName"];
-  date_default_timezone_set("America/New_York");
-  $CurrentTime=time();
-  $DateTime=strftime("%B-%d-%Y %H:%M:%S",$CurrentTime);
 
-  if(empty($Category)){
+  if(empty($Topic) || empty($Type) ){
     $_SESSION["ErrorMessage"]= "All fields must be filled out";
-    Redirect_to("Categories.php");
-  }elseif (strlen($Category)<3) {
-    $_SESSION["ErrorMessage"]= "Category title should be greater than 2 characters";
-    Redirect_to("Categories.php");
-  }elseif (strlen($Category)>49) {
-    $_SESSION["ErrorMessage"]= "Category title should be less than than 50 characters";
-    Redirect_to("Categories.php");
+    Redirect_to("Topics.php");
+  }elseif (strlen($Topic)<3) {
+    $_SESSION["ErrorMessage"]= "Topic title should be greater than 2 characters";
+    Redirect_to("Topics.php");
+  }elseif (strlen($Topic)>49) {
+    $_SESSION["ErrorMessage"]= "Topic title should be less than than 50 characters";
+    Redirect_to("Topics.php");
   }else{
-    // Query to insert category in DB When everything is fine
-    global $ConnectingDB;
-    $sql = "INSERT INTO category(title,author,datetime)";
-    $sql .= "VALUES(:categoryName,:adminName,:dateTime)";
+    // Query to insert topic in DB When everything is fine
+    $ConnectingDB;
+    $sql = "INSERT INTO topic(topic_name,topic_type)";
+    $sql .= "VALUES(:topicName,:topicType)";
     $stmt = $ConnectingDB->prepare($sql);
-    $stmt->bindValue(':categoryName',$Category);
-    $stmt->bindValue(':adminName',$Admin);
-    $stmt->bindValue(':dateTime',$DateTime);
+    $stmt->bindValue(':topicName',$Topic);
+    $stmt->bindValue(':topicType',$Type);
     $Execute=$stmt->execute();
 
     if($Execute){
-      $_SESSION["SuccessMessage"]="Category with id : " .$ConnectingDB->lastInsertId()." added Successfully";
-      Redirect_to("Categories.php");
+      $_SESSION["SuccessMessage"]="Topic : " .$Topic." added Successfully";
+      Redirect_to("Topics.php");
     }else {
       $_SESSION["ErrorMessage"]= "Something went wrong. Try Again !";
-      Redirect_to("Categories.php");
+      Redirect_to("Topics.php");
     }
   }
 } //Ending of Submit Button If-Condition
@@ -66,14 +63,15 @@ if(isset($_POST["Submit"])){
   </head>  <!-- end head -->
 <body>
   <!-- NAVBAR -->
-  <?php require("navbar.php"); ?>
+  <?php require("navbarforum.php"); ?>
+
 
     <!-- HEADER -->
     <header class="bg-dark text-white py-3">
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-          <h1 class="text-center"><i class="fas fa-edit" style="color:#27aae1;"></i> Categories</h1>
+          <h1 class="text-center"><i class="fas fa-edit" style="color:#27aae1;"></i> Topics</h1>
           </div>
         </div>
       </div>
@@ -87,31 +85,26 @@ if(isset($_POST["Submit"])){
         <thead class="thead-dark">
           <tr>
             <th>No. </th>
-            <th>Date&Time</th>
-            <th> Category Name</th>
-            <th>Creator Name</th>
+            <th>Topic Name</th>
+            <th>Topic Type</th>
             <th>Action</th>
           </tr>
         </thead>
       <?php
-      global $ConnectingDB;
-      $sql = "SELECT * FROM category ORDER BY id desc";
+      $ConnectingDB;
+      $sql = "SELECT * FROM topic ORDER BY topic_id asc";
       $Execute =$ConnectingDB->query($sql);
-      $SrNo = 0;
       while ($DataRows=$Execute->fetch()) {
-        $CategoryId = $DataRows["id"];
-        $CategoryDate = $DataRows["datetime"];
-        $CategoryName = $DataRows["title"];
-        $CreatorName= $DataRows["author"];
-        $SrNo++;
+        $TopicId = $DataRows["topic_id"];
+        $TopicName = $DataRows["topic_name"];
+        $TopicType = $DataRows["topic_type"];
       ?>
       <tbody>
         <tr>
-          <td><?php echo htmlentities($SrNo); ?></td>
-          <td><?php echo htmlentities($CategoryDate); ?></td>
-          <td><?php echo htmlentities($CategoryName); ?></td>
-          <td><?php echo htmlentities($CreatorName); ?></td>
-          <td> <a href="DeleteCategory.php?id=<?php echo $CategoryId;?>" class="btn btn-danger">Delete</a>  </td>
+          <td><?php echo htmlentities($TopicId); ?></td>
+          <td><?php echo htmlentities($TopicName); ?></td>
+          <td><?php echo htmlentities($TopicType); ?></td>
+          <td> <a href="DeleteTopic.php?id=<?php echo $TopicId;?>" class="btn btn-danger">Delete</a>  </td>
 
       </tbody>
       <?php } ?>
@@ -124,21 +117,25 @@ if(isset($_POST["Submit"])){
        echo ErrorMessage();
        echo SuccessMessage();
        ?>
-      <form class="" action="Categories.php" method="post">
+      <form class="" action="Topics.php" method="post">
         <div class="card bg-secondary text-light mb-3">
           <div class="card-header">
-            <h1 class="text-center">Add New Category</h1>
+            <h1 class="text-center">Add New Topic</h1>
           </div>
           <div class="card-body bg-dark">
             <div class="form-group">
-              <label for="title"> <span class="FieldInfo"> Category Title: </span></label>
-               <input class="form-control" type="text" name="CategoryTitle" id="title" placeholder="Input Category here" value="">
+              <label for="title"> <span class="FieldInfo"> Topic Title: </span></label>
+               <input class="form-control" type="text" name="TopicTitle" id="title" placeholder="Topic Title" value="">
+            </div>
+            <div class="form-group">
+              <label for="title"> <span class="FieldInfo"> Topic Type: </span></label>
+               <input class="form-control" type="text" name="TopicType" id="title" placeholder="Topic Type" value="">
             </div>
             <div class="row">
               
               <div class="col-lg-6 offset-lg-3 mb-2">
                 <button type="submit" name="Submit" class="btn btn-success btn-block">
-                  <i class="fas fa-check"></i> Publish
+                  <i class="fas fa-check"></i> Add Topic
                 </button>
               </div>
             </div>
@@ -148,13 +145,10 @@ if(isset($_POST["Submit"])){
 
 </section>
 
-
-
     <!-- End Main Area -->
-    <div style="height:10px; background:#deebf0;"></div>
-      <!-- FOOTER -->
       <!-- FOOTER -->
     <?php require("footerblog.php"); ?>
+
     <script>   
       $('#year').text(new Date().getFullYear());
     </script>   <!-- end script -->    

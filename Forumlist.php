@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <link rel="stylesheet" href="Css/Styles.css">
     
-    <title>John Thurlby Blog</title>
+    <title>Forum Lists</title>
 
     <style media="screen">
   .heading{
@@ -35,8 +35,8 @@
   </head>  <!-- end head -->
 
 <body>
-    <!-- NAVBAR -->
-    <?php require("navbarblog.php");?> 
+      <!-- NAVBAR -->
+      <?php require("navbarblog.php");?> 
 
     <!-- HEADER -->
     <div class="container">
@@ -44,13 +44,13 @@
 
         <!-- Main Area Start-->
         <div class="col-sm-8 ">
-          <h2>Nerdy Techie Blog in PHP by John R. Thurlby</h2>
+          <h2>Nerdy Techie Forum in PHP</h2>
           <?php
            echo ErrorMessage();
            echo SuccessMessage();
            ?>
           <?php
-          global $ConnectingDB;
+          $ConnectingDB;
           // SQL query when Searh button is active
           if(isset($_GET["SearchButton"])){
             $Search = $_GET["Search"];
@@ -159,7 +159,42 @@
 
         <!-- Side Area Start -->
         <div class="col-sm-4">
-        <div class="card">
+          <div class="card mt-4">
+            <div class="card-body">
+              <img src="images/startblog.PNG" class="d-block img-fluid mb-3" alt="">
+              <div class="text-center">
+              What is a blog?
+A blog is a type of website with posts (articles or entries) displayed in reverse chronological order. That is, the most recent posts are at the top.
+
+Why start a blog?
+There are many reasons to start a blog. Here are a few popular ones:
+
+Make money while working from home. Many bloggers make money. It’s hard work, but it’s got low risk, low overhead and low barrier to entry.
+Build a writing (or speaking) platform. It’s no secret book publishers rarely work with authors who don’t have an online presence. The reason is simple: it’s a lot easier to sell books to people who already know you. A blog is one of the easiest and most effective places to do it.
+Get more exposure for your existing business or organization. A blog gives anyone, from individuals to large companies, the ability to reach a large number of people at very little cost.
+Just write. If you want to write, share your story, encourage others and build a community, a blog is a great place to do that.
+Simply put, a blog is an online home you own and control. Use it to develop the brand or reputation you desire, establish yourself as an authority in your field, connect with customers or find other like-minded people.
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="card">
+            <div class="card-header bg-dark text-light">
+              <h2 class="lead">Sign Up !</h2>
+            </div>
+            <div class="card-body">
+              <button type="button" class="btn btn-success btn-block text-center text-white mb-4" name="button"><a href="Forumregister.php" class="page-link"></a>Join the Forum</button>
+              <button type="button" class="btn btn-danger btn-block text-center text-white mb-4" name="button">Login</button>
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" name="" placeholder="Enter your email"value="">
+                <div class="input-group-append">
+                  <button type="button" class="btn btn-primary btn-sm text-center text-white" name="button">Subscribe Now</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="card">
             <div class="card-header bg-primary text-light">
               <h2 class="lead">Categories</h2>
               </div>
@@ -202,26 +237,7 @@
               <hr>
               <?php } ?>
             </div>
-          </div>  <!-- END CARD -->
-          <br>
-          <div class="card">
-            <div class="card-header bg-dark text-light">
-              <h2 class="lead text-center">Forum</h2>
-            </div>
-            <div class="card-body">
-              <button type="button" class="btn btn-success btn-block text-center text-white mb-4" name="button"><a href="Forumregister.php" class="page-link"></a>Join the Forum</button>
-              <button type="button" class="btn btn-danger btn-block text-center text-white mb-4" name="button">Login</button>
-              <div class="input-group mb-3">
-                <input type="text" class="form-control" name="" placeholder="Enter your email"value="">
-                <div class="input-group-append">
-                  <button type="button" class="btn btn-primary btn-sm text-center text-white" name="button">Subscribe Now</button>
-                </div>
-              </div>
-            </div>
           </div>
-          <br>
-          
-          
 
         </div>
         <!-- Side Area End -->
@@ -237,10 +253,6 @@
     <!-- FOOTER -->
     <?php require("footerblog.php");?> 
 
-    <script>   
-      $('#year').text(new Date().getFullYear());
-    </script>   <!-- end script -->
-    
   </body>    <!-- END BODY -->
 </html> <!-- END HTML -->
 

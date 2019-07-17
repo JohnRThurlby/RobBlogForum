@@ -2,16 +2,18 @@
 <?php require_once("Includes/Functions.php"); ?>
 <?php require_once("Includes/Sessions.php"); ?>
 <?php
-$UserName   = @$_POST['Username'];
-$PassWord   = @$_POST['Password'];
-$RePassWord = @$_POST['RePassword'];
-$Email      = @$_POST['Email'];
+$UserName    = @$_POST['Username'];
+$PassWord    = @$_POST['Password'];
+$PassEncrypt = sha1($PassWord);
+$RePassWord  = @$_POST['RePassword'];
+$Email       = @$_POST['Email'];
 
 if (isset($_POST['submit']))
 {
   date_default_timezone_set("America/New_York");
-  $CurrentTime= time();
-  $Date       = strftime("%B-%d-%Y %H:%M:%S",$CurrentTime);
+  $CurrentTime = time();
+  $date        = date("Y-m-d");
+
   $Login_in   = true;
   if(empty($UserName)||empty($PassWord)||empty($RePassWord)){
     $_SESSION["ErrorMessage"]= "All fields must be filled out";
@@ -34,23 +36,24 @@ if (isset($_POST['submit']))
     $Login_in = false;
     Redirect_to("Forumregister.php");
   }  
+  if ($Login_in) {
     $ConnectingDB;
     $sql = "INSERT INTO users(username,password,email,date)";
     $sql .= "VALUES(:username,:password,:email,:date)";
     $stmt = $ConnectingDB->prepare($sql);
     $stmt->bindValue(':username',$UserName);
-    $stmt->bindValue(':password',$PassWord);
+    $stmt->bindValue(':password',$PassEncrypt);
     $stmt->bindValue(':email',$Email);
-    $stmt->bindValue(':date',$Date);
+    $stmt->bindValue(':date',$date);
 
     $Execute=$stmt->execute();
     if($Execute){
-      $_SESSION["SuccessMessage"]="User with id : " .$ConnectingDB->lastInsertId()." added Successfully";
-      Redirect_to("Forumregister.php");
+      $_SESSION["SuccessMessage"]="Username " .$UserName." registered successfully";
+      Redirect_to("Topics.php");
     }else {
       $_SESSION["ErrorMessage"]= "Something went wrong. Try Again !";
       Redirect_to("Forumregister.php");
-    }
+    }}
   }
 ?>
 <!DOCTYPE html>

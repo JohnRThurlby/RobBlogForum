@@ -10,10 +10,8 @@ if(isset($_POST["Submit"])){
   $Password        = $_POST["Password"];
   $ConfirmPassword = $_POST["ConfirmPassword"];
   $Admin           = $_SESSION["UserName"];
-  date_default_timezone_set("America/New_York");
-  $CurrentTime=time();
-  $DateTime=strftime("%B-%d-%Y %H:%M:%S",$CurrentTime);
-
+  $FormatdateTime  = ReformDateTime();
+  
   if(empty($UserName)||empty($Password)||empty($ConfirmPassword)){
     $_SESSION["ErrorMessage"]= "All fields must be filled out";
     Redirect_to("Admins.php");
@@ -28,11 +26,11 @@ if(isset($_POST["Submit"])){
     Redirect_to("Admins.php");
   }else{
     // Query to insert new admin in DB When everything is fine
-    global $ConnectingDB;
+    $ConnectingDB;
     $sql = "INSERT INTO admins(datetime,username,password,aname,addedby)";
     $sql .= "VALUES(:dateTime,:userName,:password,:aName,:adminName)";
     $stmt = $ConnectingDB->prepare($sql);
-    $stmt->bindValue(':dateTime',$DateTime);
+    $stmt->bindValue(':dateTime',$FormatdateTime);
     $stmt->bindValue(':userName',$UserName);
     $stmt->bindValue(':password',$Password);
     $stmt->bindValue(':aName',$Name);
@@ -74,52 +72,14 @@ if(isset($_POST["Submit"])){
   </head>  <!-- end head -->
 <body>
   <!-- NAVBAR -->
-  <div style="height:10px; background:#696f72;"></div>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-          <a href="#" class="navbar-brand"> JOHNRTHURLBY.INFO</a>
-          <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarcollapseCMS">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a href="MyProfile.php" class="nav-link"> <i class="fas fa-user text-success"></i> My Profile</a>
-            </li>
-            <li class="nav-item">
-              <a href="Dashboard.php" class="nav-link">Dashboard</a>
-            </li>
-            <li class="nav-item">
-              <a href="Posts.php" class="nav-link">Posts</a>
-            </li>
-            <li class="nav-item">
-              <a href="Categories.php" class="nav-link">Categories</a>
-            </li>
-            <li class="nav-item">
-              <a href="Admins.php" class="nav-link"><i class="fas fa-tasks"></i> Manage Admins</a>
-            </li>
-            <li class="nav-item">
-              <a href="Comments.php" class="nav-link"><i class="fas fa-comments"></i> Comments</a>
-            </li>
-            <li class="nav-item">
-              <a href="Blog.php?page=1" class="nav-link" target="_blank"><i class="fas fa-blog"></i> Live Blog</a>
-            </li>
-          </ul>
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item"><a href="Logout.php" class="nav-link text-danger">
-              <i class="fas fa-user-times"></i> Logout</a></li>
-          </ul>
-          </div>
-        </div>
-      </nav>
-      <div style="height:10px; background:#deebf0;"></div>
-      <!-- NAVBAR END -->
+  <?php require("navbar.php"); ?>
+  <!-- NAVBAR END -->
     <!-- HEADER -->
     <header class="bg-dark text-white py-3">
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-          <h1><i class="fas fa-user" style="color:#27aae1;"></i> Manage Admins</h1>
+          <h1 class="text-center"><i class="fas fa-user" style="color:#27aae1;"></i> Admins</h1>
           </div>
         </div>
       </div>
@@ -130,47 +90,7 @@ if(isset($_POST["Submit"])){
 <section class="container py-2 mb-4">
   <div class="row">
     <div class="offset-lg-1 col-lg-10" style="min-height:400px;">
-      <?php
-       echo ErrorMessage();
-       echo SuccessMessage();
-       ?>
-      <form class="" action="Admins.php" method="post">
-        <div class="card bg-secondary text-light mb-3">
-          <div class="card-header">
-            <h1>Add New Admin</h1>
-          </div>
-          <div class="card-body bg-dark">
-            <div class="form-group">
-              <label for="username"> <span class="FieldInfo"> Username: </span></label>
-               <input class="form-control" type="text" name="Username" id="username"  value="">
-            </div>
-            <div class="form-group">
-              <label for="Name"> <span class="FieldInfo"> Name: </span></label>
-               <input class="form-control" type="text" name="Name" id="Name" value="">
-               <small class="text-muted">*Optional</small>
-            </div>
-            <div class="form-group">
-              <label for="Password"> <span class="FieldInfo"> Password: </span></label>
-               <input class="form-control" type="password" name="Password" id="Password" value="">
-            </div>
-            <div class="form-group">
-              <label for="ConfirmPassword"> <span class="FieldInfo"> Confirm Password:</span></label>
-               <input class="form-control" type="password" name="ConfirmPassword" id="ConfirmPassword"  value="">
-            </div>
-            <div class="row">
-              <div class="col-lg-6 mb-2">
-                <a href="Dashboard.php" class="btn btn-warning btn-block"><i class="fas fa-arrow-left"></i> Back To Dashboard</a>
-              </div>
-              <div class="col-lg-6 mb-2">
-                <button type="submit" name="Submit" class="btn btn-success btn-block">
-                  <i class="fas fa-check"></i> Publish
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
-      <h2>Existing Admins</h2>
+    <h2>Existing Admins</h2>
       <table class="table table-striped table-hover">
         <thead class="thead-dark">
           <tr>
@@ -207,50 +127,53 @@ if(isset($_POST["Submit"])){
       </tbody>
       <?php } ?>
       </table>
+      <?php
+       echo ErrorMessage();
+       echo SuccessMessage();
+       ?>
+      <form class="" action="Admins.php" method="post">
+        <div class="card bg-secondary text-light mb-3">
+          <div class="card-header">
+            <h1 class="text-center">Add Admin</h1>
+          </div>
+          <div class="card-body bg-dark">
+            <div class="form-group">
+              <label for="username"> <span class="FieldInfo"> Username: </span></label>
+               <input class="form-control" type="text" name="Username" id="username"  value="">
+            </div>
+            <div class="form-group">
+              <label for="Name"> <span class="FieldInfo"> Name: </span></label>
+               <input class="form-control" type="text" name="Name" id="Name" value="">
+               <small class="text-muted">*Optional</small>
+            </div>
+            <div class="form-group">
+              <label for="Password"> <span class="FieldInfo"> Password: </span></label>
+               <input class="form-control" type="password" name="Password" id="Password" value="">
+            </div>
+            <div class="form-group">
+              <label for="ConfirmPassword"> <span class="FieldInfo"> Confirm Password:</span></label>
+               <input class="form-control" type="password" name="ConfirmPassword" id="ConfirmPassword"  value="">
+            </div>
+            <div class="row">
+              <div class="col-lg-6 offset-lg-3 mb-2">
+                <button type="submit" name="Submit" class="btn btn-success btn-block">
+                  <i class="fas fa-check"></i> Publish
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      
     </div>
   </div>
 
 </section>
-
-
-
     <!-- End Main Area -->
+    
     <!-- FOOTER -->
-      <!-- NAVBAR -->
-      <div style="height:10px; background:#696f72;">
-      </div>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-          <a href="#" class="navbar-brand"> JOHNRTHURLBY.INFO</a>
-          <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
-            <span class="navbar-toggler-icon"></span>
-          </button> <!-- END bUTTON -->
-          <div class="collapse navbar-collapse" id="navbarcollapseCMS">
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item">
-                <a href="Contact.php" class="nav-link"><i class="fas fa-envelope-square"></i> Contact</a>
-              </li> <!-- END CONTACT ITEM -->
-              <li class="nav-item">
-                <a href="Privacy.php" class="nav-link">Privacy</a>
-              </li> <!-- END PRIVACY ITEM -->
-            </ul> <!-- END UL -->
-            <ul class="navbar-nav ml-auto">
-            </ul> <!-- UL -->
-          </div> <!-- END DIV COLLAPSE -->
-        </div> <!-- END CONTAINER -->
-      </nav> <!-- END HEADER -->
+    <?php require("footerblog.php"); ?>
 
-    <footer class="bg-dark text-white">
-      <div class="container">
-        <div class="row">
-          <div class="col">
-            <p class="lead text-center">John R. Thurlby | <span id="year"></span> &copy; ----All right Reserved.</p>
-          </div> <!-- END COL -->
-        </div> <!-- END ROW -->
-      </div> <!-- END CONTAINER -->
-    </footer> <!-- END FOOTER -->
-
-    <div style="height:10px; background:#696f72;"></div>
         
   </body>    <!-- END BODY -->
 </html> <!-- END HTML -->

@@ -9,22 +9,16 @@
       <div class="collapse navbar-collapse" id="navbarcollapseCMS">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <a href="Blog.php?page=1" class="nav-link">Home</a>
+          <a href="Topics.php" class="nav-link">Topics</a>
         </li>
         <li class="nav-item">
-          <a href="Blog.php?page=1" class="nav-link">Blog</a>
+          <a href="SubTopics.php" class="nav-link">SubTopics</a>
         </li>
         <li class="nav-item">
-          <a href="Features.php" class="nav-link">Features</a>
-        </li>
-        <li class="nav-item">
-          <a href="Contactblog.php" class="nav-link"><i class="fas fa-envelope-square"></i> Contact</a>
+          <a href="Questions.php" class="nav-link"><i class="fas fa-envelope-square"></i> Questions</a>
         </li>
         <li class="nav-item">
           <a href="About.php" class="nav-link">About</a>
-        </li>
-        <li class="nav-item">
-          <a href="Login.php" class="nav-link">Admin</a>
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">

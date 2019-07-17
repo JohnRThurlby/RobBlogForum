@@ -1,3 +1,8 @@
+<?php require_once("Includes/DB.php"); ?>
+<?php require_once("Includes/Functions.php"); ?>
+<?php require_once("Includes/Sessions.php"); ?>
+<?php $_SESSION["TrackingURL"]=$_SERVER["PHP_SELF"];
+ Confirm_Login(); ?>
 <?php
 // Initialize variables to null.
 $NameError="";
@@ -6,6 +11,7 @@ $EmailError="";
 $Email_good = false;
 $WebsiteError="";
 $Website_good = false;
+$EmailConclusion = "";
 
 //On Submitting form, below function will execute
 //Submit Scope starts from here
@@ -47,14 +53,16 @@ $WebsiteError="Invalid Webside Address Format";
 }
 else {$Website_good = true;}
 }
+$Comment=Test_User_Input($_POST["Comment"]);
+
 if($Name_good && $Email_good && $Website_good)
 
 {
-echo "<h2>Your Submit Information</h2> <br>";
+/*echo "<h2>Your Submit Information</h2> <br>";
 echo "Name:".ucwords ($_POST["Name"])."<br>";
 echo "Email: {$_POST["Email"]}<br>";
 echo "Website: {$_POST["Website"]}<br>";
-echo "Comments: {$_POST["Comment"]}<br>";
+echo "Comments: {$_POST["Comment"]}<br>";*/
 $emailTo="johnrthurlby@gmail.com";
  $subject="Contact Form";
  $body=" A person name : ".$_POST["Name"]." With the Email : ".$_POST["Email"].
@@ -62,12 +70,34 @@ $emailTo="johnrthurlby@gmail.com";
  " Added Comment :: ".$_POST["Comment"];
  $Sender="From:{$_POST["Email"]}";
      if (mail($emailTo, $subject, $body, $Sender)) {
-                echo "Mail sent successfully!";
-                    } else {
-                                echo "Mail not sent!";
-                    }
+          $EmailConclusion = "Mail sent successfully!";
+          $FormatdateTime = ReformDateTime();
+          $Source = 2;
+          // Query to insert new email in DB When everything is fine
+            $ConnectingDB;
+            $sql = "INSERT INTO emails(email,sender,website,comment,email_source,datetime)";
+            $sql .= "VALUES(:emailSender,:senderName,:webSite,:comment,:source,:dateTime)";
+            $stmt = $ConnectingDB->prepare($sql);
+            $stmt->bindValue(':emailSender',$Email);
+            $stmt->bindValue(':senderName',$Name);
+            $stmt->bindValue(':webSite',$Website);
+            $stmt->bindValue(':comment',$Comment);
+            $stmt->bindValue(':source',$Source);
+            $stmt->bindValue(':dateTime',$FormatdateTime);
+            $Execute=$stmt->execute();
+            if($Execute){
+              $_SESSION["SuccessMessage"] = "added Successfully";
+              //Redirect_to("Contact.php");
+            }else {
+              $_SESSION["ErrorMessage"]= "Something went wrong. Try Again !";
+             // Redirect_to("Contact.php");
+            }
+            
+          } else {
+            $EmailConclusion = "Mail not sent!";
+          }
 }else{
-	echo '<span class="Error">* Please Complete & Correct your Form & Try Again *</span>';
+	$EmailConclusion = "Please Complete & Correct your Form & Try Again";
 }
 }//Submit Scope  Ends here
 //Function to get and throw data to each of the field final varriable like Name / Gender etc.
@@ -77,8 +107,6 @@ function Test_User_Input($Data){
 
 //php code ends here
 ?>
-
-
 
 <html lang="en">
   <head>
@@ -91,9 +119,7 @@ function Test_User_Input($Data){
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-    <script>   
-      $('#year').text(new Date().getFullYear());
-    </script>   <!-- end script -->
+    
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
@@ -117,51 +143,27 @@ function Test_User_Input($Data){
   </head>  <!-- end head -->
 <body>
   <!-- NAVBAR -->
-  <div style="height:10px; background:#696f72;"></div>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-          <a href="#" class="navbar-brand"> JOHNRTHURLBY.INFO</a>
-          <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarcollapseCMS">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a href="MyProfile.php" class="nav-link"> <i class="fas fa-user text-success"></i> My Profile</a>
-            </li>
-            <li class="nav-item">
-              <a href="Dashboard.php" class="nav-link">Dashboard</a>
-            </li>
-            <li class="nav-item">
-              <a href="Posts.php" class="nav-link">Posts</a>
-            </li>
-            <li class="nav-item">
-              <a href="Categories.php" class="nav-link">Categories</a>
-            </li>
-            <li class="nav-item">
-              <a href="Admins.php" class="nav-link"><i class="fas fa-tasks"></i> Manage Admins</a>
-            </li>
-            <li class="nav-item">
-              <a href="Comments.php" class="nav-link"><i class="fas fa-comments"></i> Comments</a>
-            </li>
-            <li class="nav-item">
-              <a href="Blog.php?page=1" class="nav-link" target="_blank"><i class="fas fa-blog"></i> Live Blog</a>
-            </li>
-          </ul>
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item"><a href="Logout.php" class="nav-link text-danger">
-              <i class="fas fa-user-times"></i> Logout</a></li>
-          </ul>
+  <?php require("navbar.php"); ?>
+
+<!-- HEADER -->
+<header class="bg-dark text-white py-3">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-11">
+          <h1 class="text-center"><i class="fas fa-envelope-square" style="color:#27aae1;"></i> Contact Us</h1>
           </div>
         </div>
-      </nav>
-      <div style="height:10px; background:#deebf0;"></div>
-      <!-- NAVBAR END -->
-<?php ?>
-<h2>Contact Us</h2>
+      </div>
+    </header>
+    <!-- HEADER END -->
 
-<form  action="Contact.php" method="post"> 
-<legend>* Please Fill Out the following Fields.</legend>			
+    <section class="container py-2 mb-4">
+  <div class="row">
+    <div class="offset-lg-2 col-lg-10" style="min-height:400px;">
+   
+      
+      <form  action="Contact.php" method="post"> 
+
 <fieldset>
 Name:<br>
 <input class="input" type="text" Name="Name" value="">
@@ -177,46 +179,29 @@ Comment:<br>
 <br>
 <br>
 <input type="Submit" Name="Submit" value="Submit Your Information">
+   <br>
+   <span class="Error"><?php echo $EmailConclusion; ?></span><br>
+
    </fieldset>
 </form>
+<legend>* Required Fields.</legend>	
+	
 
-<div style="height:10px; background:#deebf0;"></div>
+      
+    </div>
+  </div>
+
+</section>
+
+
+
       <!-- FOOTER -->
-      <!-- NAVBAR -->
-      <div style="height:10px; background:#696f72;">
-      </div>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-          <a href="#" class="navbar-brand"> JOHNRTHURLBY.INFO</a>
-          <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
-            <span class="navbar-toggler-icon"></span>
-          </button> <!-- END bUTTON -->
-          <div class="collapse navbar-collapse" id="navbarcollapseCMS">
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item">
-                <a href="Contact.php" class="nav-link"><i class="fas fa-envelope-square"></i> Contact</a>
-              </li> <!-- END CONTACT ITEM -->
-              <li class="nav-item">
-                <a href="Privacy.php" class="nav-link">Privacy</a>
-              </li> <!-- END PRIVACY ITEM -->
-            </ul> <!-- END UL -->
-            <ul class="navbar-nav ml-auto">
-            </ul> <!-- UL -->
-          </div> <!-- END DIV COLLAPSE -->
-        </div> <!-- END CONTAINER -->
-      </nav> <!-- END HEADER -->
+      <?php require("footerblog.php"); ?>
 
-    <footer class="bg-dark text-white">
-      <div class="container">
-        <div class="row">
-          <div class="col">
-            <p class="lead text-center">John R. Thurlby | <span id="year"></span> &copy; ----All right Reserved.</p>
-          </div> <!-- END COL -->
-        </div> <!-- END ROW -->
-      </div> <!-- END CONTAINER -->
     </footer> <!-- END FOOTER -->
-
-    <div style="height:10px; background:#696f72;"></div>
+    <script>   
+      $('#year').text(new Date().getFullYear());
+    </script>   <!-- end script -->
         
   </body>    <!-- END BODY -->
 </html> <!-- END HTML -->

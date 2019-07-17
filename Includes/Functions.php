@@ -44,6 +44,21 @@ function Login_Attempt($UserName,$Password){
     return null;
   }
 }
+function ForumLogin_Attempt($UserName,$Password){
+  $PassEncrypt = sha1($Password);
+  global $ConnectingDB;
+  $sql = "SELECT * FROM users WHERE username=:userName AND password=:passWord LIMIT 1";
+  $stmt = $ConnectingDB->prepare($sql);
+  $stmt->bindValue(':userName',$UserName);
+  $stmt->bindValue(':passWord',$PassEncrypt);
+  $stmt->execute();
+  $Result = $stmt->rowcount();
+  if ($Result==1) {
+    return $Found_Account=$stmt->fetch();
+  }else {
+    return null;
+  }
+}
 function Confirm_Login(){
 if (isset($_SESSION["UserId"])) {
   return true;
@@ -107,5 +122,12 @@ function DisApproveCommentsAccordingtoPost($PostId){
   $RowsTotal = $stmtDisApprove->fetch();
   $Total = array_shift($RowsTotal);
   return $Total;
+}
+
+function ReformDateTime(){
+  date_default_timezone_set("America/New_York");
+  $CurrentTime=time();
+  $FormatdateTime=strftime("%B-%d-%Y %H:%M:%S",$CurrentTime);
+  return $FormatdateTime;
 }
  ?>

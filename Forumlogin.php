@@ -4,9 +4,9 @@
 <?php require_once("Includes/Sessions.php"); ?>
 
 <?php
-// If global session is set, send to dashboard 
+// If global session is set, send to 
 if(isset($_SESSION["UserId"])){
-  Redirect_to("Dashboard.php");
+  //Redirect_to("Forumlogin.php");
 }  // END ISSET SESSION
 
 // If global post is submit, check login 
@@ -19,25 +19,25 @@ if (isset($_POST["Submit"]))
 
   if (empty($UserName)||empty($Password)) {
     $_SESSION["ErrorMessage"]= "All fields must be filled out";
-    Redirect_to("Login.php");
+    Redirect_to("Forumlogin.php");
   }    // END IF EITHER EMPTY 
   else 
     {
     // see if user is in DB by calling function
-    $Found_Account=Login_Attempt($UserName,$Password);
+    $Found_Account=ForumLogin_Attempt($UserName,$Password);
 
     if ($Found_Account) 
       {
       $_SESSION["UserId"]=$Found_Account["id"];
       $_SESSION["UserName"]=$Found_Account["username"];
-      $_SESSION["AdminName"]=$Found_Account["aname"];
-      $_SESSION["SuccessMessage"]= "Welcome ".$_SESSION["AdminName"]."!";
-      
+      $_SESSION["SuccessMessage"]= "Welcome ".$_SESSION["UserName"]."!";
+      Redirect_to("Topics.php");
+
       }  // END ACCOUNT FOUND
     else 
       {
       $_SESSION["ErrorMessage"]="Incorrect Username/Password";
-      Redirect_to("Forumregister.php");
+      Redirect_to("Forumlogin.php");
       } // END ELSE
     } // END ELSE
   } // END SUBMIT
@@ -54,9 +54,7 @@ if (isset($_POST["Submit"]))
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-    <script>   
-      $('#year').text(new Date().getFullYear());
-    </script>   <!-- end script -->
+    
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
@@ -107,7 +105,7 @@ if (isset($_POST["Submit"]))
             </div> <!-- END CARD HEADER -->
 
             <div class="card-body bg-dark">
-              <form class="" action="Login.php" method="post">
+              <form class="" action="Forumlogin.php" method="post">
                 <div class="form-group">
                   <label for="username"><span class="FieldInfo">Username:</span></label>
                   <div class="input-group mb-3">
