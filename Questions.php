@@ -1,44 +1,7 @@
 <?php require_once("Includes/DB.php"); ?>
 <?php require_once("Includes/Functions.php"); ?>
 <?php require_once("Includes/Sessions.php"); ?>
-<?php
-$_SESSION["TrackingURL"]=$_SERVER["PHP_SELF"];
- Confirm_Login(); ?>
-<?php
-if(isset($_POST["Submit"])){
-  $Topic = $_POST["TopicTitle"];
-  $Type  = $_POST["TopicType"];
-  $Admin = $_SESSION["UserName"];
 
-  if(empty($Topic) || empty($Type) ){
-    $_SESSION["ErrorMessage"]= "All fields must be filled out";
-    Redirect_to("Topics.php");
-  }elseif (strlen($Topic)<3) {
-    $_SESSION["ErrorMessage"]= "Topic title should be greater than 2 characters";
-    Redirect_to("Topics.php");
-  }elseif (strlen($Topic)>49) {
-    $_SESSION["ErrorMessage"]= "Topic title should be less than than 50 characters";
-    Redirect_to("Topics.php");
-  }else{
-    // Query to insert topic in DB When everything is fine
-    $ConnectingDB;
-    $sql = "INSERT INTO topic(topic_name,topic_type)";
-    $sql .= "VALUES(:topicName,:topicType)";
-    $stmt = $ConnectingDB->prepare($sql);
-    $stmt->bindValue(':topicName',$Topic);
-    $stmt->bindValue(':topicType',$Type);
-    $Execute=$stmt->execute();
-
-    if($Execute){
-      $_SESSION["SuccessMessage"]="Topic : " .$Topic." added Successfully";
-      Redirect_to("Topics.php");
-    }else {
-      $_SESSION["ErrorMessage"]= "Something went wrong. Try Again !";
-      Redirect_to("Topics.php");
-    }
-  }
-} //Ending of Submit Button If-Condition
- ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -58,18 +21,19 @@ if(isset($_POST["Submit"])){
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <link rel="stylesheet" href="Css/Styles.css">
     
-    <title>John Thurlby Blog</title>
+    <title>John Thurlby Forum</title>
 
   </head>  <!-- end head -->
 <body>
   <!-- NAVBAR -->
+  <?php require("navbarforum.php"); ?>
 
     <!-- HEADER -->
     <header class="bg-dark text-white py-3">
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-          <h1 class="text-center"><i class="fas fa-edit" style="color:#27aae1;"></i> Topics</h1>
+          <h1 class="text-center"><i class="fas fa-edit" style="color:#27aae1;"></i> Questions</h1>
           </div>
         </div>
       </div>
@@ -82,27 +46,52 @@ if(isset($_POST["Submit"])){
       <table class="table table-striped table-hover">
         <thead class="thead-dark">
           <tr>
-            <th>No. </th>
-            <th>Topic Name</th>
-            <th>Topic Type</th>
-            <th>Action</th>
+            <th>Heading</th>
+            <th>Details</th>
+            <th>Date Added</th>
+            <th>Number of Views</th>
+            <th>Details</th>
+            <th>Reply</th>
           </tr>
         </thead>
       <?php
       $ConnectingDB;
-      $sql = "SELECT * FROM topic ORDER BY topic_id asc";
-      $Execute =$ConnectingDB->query($sql);
-      while ($DataRows=$Execute->fetch()) {
-        $TopicId = $DataRows["topic_id"];
-        $TopicName = $DataRows["topic_name"];
-        $TopicType = $DataRows["topic_type"];
+      if(isset($_GET["id"])){
+        $SearchQueryParameter = $_GET["id"];
+        $sql = "SELECT subtopic_name FROM subtopic  WHERE subtopic_id = $SearchQueryParameter LIMIT 1";
+        $stmt   =  $ConnectingDB->prepare($sql);
+        $stmt   -> execute();
+        $Result = $stmt->rowcount();
+        if( $Result==1 ){
+          while ( $DataRows = $stmt->fetch() ) {
+            $SubTopicName = $DataRows["subtopic_name"];
+          } ?>
+          <h3 class="text-center"><?php echo $SubTopicName; ?></h3>
+        <?php }else {
+          $_SESSION["ErrorMessage"]="Bad Request !!";
+          Redirect_to("Questions.php?page=1");
+        }
+        $sql = "SELECT * FROM question  WHERE subtopic_id = $SearchQueryParameter ORDER BY datetime ASC";
+      }
+      else { 
+        $sql = "SELECT * FROM question ORDER BY datetime ASC";
+      }
+      $Execute = $ConnectingDB->query($sql); 
+      while ($DataRows = $Execute->fetch()) {
+        $QuestId   = $DataRows["question_id"];
+        $Heading   = $DataRows["heading"];
+        $QuestionDetail = $DataRows["question_detail"];
+        $QuestTime = $DataRows["datetime"];
+        $Views    = $DataRows["views"];
       ?>
       <tbody>
         <tr>
-          <td><?php echo htmlentities($TopicId); ?></td>
-          <td><?php echo htmlentities($TopicName); ?></td>
-          <td><?php echo htmlentities($TopicType); ?></td>
-          <td> <a href="DeleteTopic.php?id=<?php echo $TopicId;?>" class="btn btn-danger">Delete</a>  </td>
+          <td><?php echo htmlentities($Heading); ?></td>
+          <td><?php echo htmlentities($QuestionDetail); ?></td>
+          <td><?php echo htmlentities($QuestTime); ?></td>
+          <td><?php echo htmlentities($Views); ?></td>
+          <td style="min-width:100px;"> <a class="btn btn-primary"href="QuestionDetails.php?id=<?php echo $QuestId; ?>" target="_blank">Detailed</a> </td>
+          <td style="min-width:100px;"> <a class="btn btn-primary"href="Reply.php?id=<?php echo $QuestId; ?>" target="_blank">Reply</a> </td>
 
       </tbody>
       <?php } ?>
@@ -115,25 +104,25 @@ if(isset($_POST["Submit"])){
        echo ErrorMessage();
        echo SuccessMessage();
        ?>
-      <form class="" action="Topics.php" method="post">
+      <form class="" action="Questions.php" method="post">
         <div class="card bg-secondary text-light mb-3">
           <div class="card-header">
-            <h1 class="text-center">Add New Topic</h1>
+            <h1 class="text-center">Add New Sub Topic</h1>
           </div>
           <div class="card-body bg-dark">
             <div class="form-group">
-              <label for="title"> <span class="FieldInfo"> Topic Title: </span></label>
-               <input class="form-control" type="text" name="TopicTitle" id="title" placeholder="Topic Title" value="">
+              <label for="title"> <span class="FieldInfo"> SubTopic Name: </span></label>
+               <input class="form-control" type="text" name="SubTopicName" id="title" placeholder="Sub Topic Name" value="">
             </div>
             <div class="form-group">
-              <label for="title"> <span class="FieldInfo"> Topic Type: </span></label>
-               <input class="form-control" type="text" name="TopicType" id="title" placeholder="Topic Type" value="">
+              <label for="title"> <span class="FieldInfo"> SubTopic Description: </span></label>
+               <input class="form-control" type="text" name="SubTopicDesc" id="title" placeholder="Sub Topic Description" value="">
             </div>
             <div class="row">
               
               <div class="col-lg-6 offset-lg-3 mb-2">
                 <button type="submit" name="Submit" class="btn btn-success btn-block">
-                  <i class="fas fa-check"></i> Add Topic
+                  <i class="fas fa-check"></i> Add Question
                 </button>
               </div>
             </div>

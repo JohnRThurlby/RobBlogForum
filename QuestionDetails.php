@@ -3,23 +3,26 @@
 <?php require_once("Includes/Sessions.php"); ?>
 <!-- Fetching Existing Data -->
 <?php
-    $SearchQueryParameter = $_GET["username"];
+    $SearchQueryParameter = $_GET["id"];
     global   $ConnectingDB;
-    $sql    =  "SELECT aname,aheadline,abio,aimage FROM admins WHERE username=:userName";
+    $sql    =  "SELECT * FROM question WHERE question_id = $SearchQueryParameter";
     $stmt   =  $ConnectingDB->prepare($sql);
-    $stmt   -> bindValue(':userName', $SearchQueryParameter);
     $stmt   -> execute();
     $Result = $stmt->rowcount();
 if( $Result==1 ){
   while ( $DataRows   = $stmt->fetch() ) {
-    $ExistingName     = $DataRows["aname"];
-    $ExistingBio      = $DataRows["abio"];
-    $ExistingImage    = $DataRows["aimage"];
-    $ExistingHeadline = $DataRows["aheadline"];
+    $QuestId          = $DataRows["question_id"];
+    $QuestHead        = $DataRows["heading"];
+    $QuestDetail      = $DataRows["question_detail"];
+    $QuestDateTime    = $DataRows["datetime"];
+    $QuestUserId      = $DataRows["user_id"];
+    $QuestSubTopicId  = $DataRows["subtopic_id"];
+    $QuestViews       = $DataRows["views"];
+
   }
 }else {
   $_SESSION["ErrorMessage"]="Bad Request !!";
-  Redirect_to("Blog.php?page=1");
+  Redirect_to("Questions.php");
 }
 
 
@@ -50,43 +53,41 @@ if( $Result==1 ){
   </head>  <!-- end head -->
 <body>
   <!-- NAVBAR -->
-  <?php require("navbar.php"); ?>
-
-      <!-- NAVBAR END -->
-    <!-- HEADER -->
+    <?php require("navbarforum.php"); ?>
+  <!-- NAVBAR END -->
+    
+  <!-- HEADER -->
     <header class="bg-dark text-white py-3">
       <div class="container">
         <div class="row">
-          <div class="col-md-6">
-          <h1><i class="fas fa-user text-success mr-2" style="color:#27aae1;"></i><?php echo $ExistingName; ?></h1>
-          <h3><?php echo $ExistingHeadline; ?></h3>
+          <div class="col-md-12">
+            <div class="card bg-light text-dark mb-3">
+              <div class="card-header">
+                <h1 class="text-center"><?php echo $QuestHead; ?></h1>
+              </div>
+              <div >
+                <div class="row">
+                  <div class="col-lg-6 offset-lg-3 mb-2">
+                    <h5 class="text-center"><?php echo $QuestDetail; ?></h5><br>
+                    <h5>Date Added: <?php echo $QuestDateTime; ?></h5>
+                    <h5 class="text-left">Number of Views: <?php echo $QuestViews; ?></h5><br>
+                    <h5 class="text-left">Added By:        <?php echo $QuestUserId; ?></h5><br>
+                    <h5 class="text-left">SubTopic:        <?php echo $QuestSubTopicId; ?></h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+              
           </div>
+        
         </div>
       </div>
     </header>
     <!-- HEADER END -->
-    <section class="container py-2 mb-4">
-      <div class="row">
-        <div class="col-md-3">
-          <img src="images/<?php echo $ExistingImage; ?>" class="d-block img-fluid mb-3 rounded-circle" alt="">
-        </div>
-        <div class="col-md-9" style="min-height:400px;">
-          <div class="card">
-            <div class="card-body">
-              <p class="lead"> <?php echo $ExistingBio; ?> </p>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
+    
 
     <!-- FOOTER -->
     <?php require("footerblog.php"); ?>
         
   </body>    <!-- END BODY -->
 </html> <!-- END HTML -->
-

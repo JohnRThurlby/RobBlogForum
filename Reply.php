@@ -1,11 +1,6 @@
 <?php require_once("Includes/DB.php"); ?>
 <?php require_once("Includes/Functions.php"); ?>
 <?php require_once("Includes/Sessions.php"); ?>
-<?php
-if(isset($_GET["id"])){
-  $SearchQueryParameter = $_GET["id"];}
-  
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -38,7 +33,7 @@ if(isset($_GET["id"])){
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-          <h1 class="text-center"><i class="fas fa-edit" style="color:#27aae1;"></i> Sub Topics</h1>
+          <h1 class="text-center"><i class="fas fa-edit" style="color:#27aae1;"></i> Questions</h1>
           </div>
         </div>
       </div>
@@ -51,47 +46,47 @@ if(isset($_GET["id"])){
       <table class="table table-striped table-hover">
         <thead class="thead-dark">
           <tr>
-            <th>SubTopic</th>
-            <th>Description</th>
-            <th>Status</th>
-            <th>Number of Questions</th>
+            <th>Heading</th>
+            <th>Details</th>
+            <th>Date Added</th>
+            <th>Number of Views</th>
           </tr>
         </thead>
       <?php
       $ConnectingDB;
       if(isset($_GET["id"])){
         $SearchQueryParameter = $_GET["id"];
-        $sql = "SELECT topic_name FROM topic  WHERE topic_id = $SearchQueryParameter LIMIT 1";
+        $sql = "SELECT subtopic_name FROM subtopic  WHERE subtopic_id = $SearchQueryParameter LIMIT 1";
         $stmt   =  $ConnectingDB->prepare($sql);
         $stmt   -> execute();
         $Result = $stmt->rowcount();
         if( $Result==1 ){
           while ( $DataRows = $stmt->fetch() ) {
-            $TopicName = $DataRows["topic_name"];
+            $SubTopicName = $DataRows["subtopic_name"];
           } ?>
-          <h3 class="text-center"><?php echo $TopicName; ?></h3>
+          <h3 class="text-center"><?php echo $SubTopicName; ?></h3>
         <?php }else {
           $_SESSION["ErrorMessage"]="Bad Request !!";
-          Redirect_to("Blog.php?page=1");
+          Redirect_to("Questions.php?page=1");
         }
-        $sql = "SELECT * FROM subtopic  WHERE topic_id = $SearchQueryParameter ORDER BY subtopic_id asc";
+        $sql = "SELECT * FROM question  WHERE subtopic_id = $SearchQueryParameter";
       }
       else { 
-        $sql = "SELECT * FROM subtopic ORDER BY subtopic_id asc";
+        $sql = "SELECT * FROM question";
       }
       $Execute = $ConnectingDB->query($sql);
       while ($DataRows = $Execute->fetch()) {
-        $SubTopicId   = $DataRows["subtopic_id"];
-        $SubTopicName = $DataRows["subtopic_name"];
-        $SubTopicDesc = $DataRows["subtopic_description"];
-        $SubStatus    = $DataRows["s_status"];
+        $Heading   = $DataRows["heading"];
+        $QuestionDetail = $DataRows["question_detail"];
+        $QuestTime = $DataRows["datetime"];
+        $Views    = $DataRows["views"];
       ?>
       <tbody>
         <tr>
-          <td><?php echo htmlentities($SubTopicName); ?></td>
-          <td><?php echo htmlentities($SubTopicDesc); ?></td>
-          <td><?php echo htmlentities($SubStatus); ?></td>
-          <td><a style="text-decoration:none;"href="Questions.php?id=<?php echo $SubTopicId; ?>" target="_blank">  <h6 class="lead"><?php echo htmlentities(TotalQuestions($SubTopicId)); ?></h6> </a>
+          <td><?php echo htmlentities($Heading); ?></td>
+          <td><?php echo htmlentities($QuestionDetail); ?></td>
+          <td><?php echo htmlentities($QuestTime); ?></td>
+          <td><?php echo htmlentities($Views); ?></td>
 
       </tbody>
       <?php } ?>
@@ -104,7 +99,7 @@ if(isset($_GET["id"])){
        echo ErrorMessage();
        echo SuccessMessage();
        ?>
-      <form class="" action="Topics.php" method="post">
+      <form class="" action="Questions.php" method="post">
         <div class="card bg-secondary text-light mb-3">
           <div class="card-header">
             <h1 class="text-center">Add New Sub Topic</h1>
@@ -122,7 +117,7 @@ if(isset($_GET["id"])){
               
               <div class="col-lg-6 offset-lg-3 mb-2">
                 <button type="submit" name="Submit" class="btn btn-success btn-block">
-                  <i class="fas fa-check"></i> Add SubTopic
+                  <i class="fas fa-check"></i> Add Question
                 </button>
               </div>
             </div>

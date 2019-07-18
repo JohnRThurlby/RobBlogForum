@@ -59,7 +59,7 @@ Confirm_Login(); ?>
                 <th>Date&Time</th>
                 <th>Name</th>
                 <th>Comment</th>
-                <th>Aprove</th>
+                <th>Approve</th>
                 <th>Action</th>
                 <th>Details</th>
               </tr>

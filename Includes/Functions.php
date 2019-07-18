@@ -106,6 +106,15 @@ function TotalComments(){
   echo $TotalComments;
 }
 
+function TotalQuestions($SubTopicId){
+  global $ConnectingDB;
+  $sql = "SELECT COUNT(*) FROM question WHERE subtopic_id = $SubTopicId";
+  $stmt = $ConnectingDB->query($sql);
+  $TotalRows= $stmt->fetch();
+  $TotalQuest=array_shift($TotalRows);
+  return $TotalQuest;
+}
+
 function ApproveCommentsAccordingtoPost($PostId){
   global $ConnectingDB;
   $sqlApprove = "SELECT COUNT(*) FROM comments WHERE post_id='$PostId' AND status='ON'";
