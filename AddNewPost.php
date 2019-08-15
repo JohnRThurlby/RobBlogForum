@@ -21,7 +21,7 @@ if(isset($_POST["Submit"])){
   }elseif (strlen($PostTitle)<5) {
     $_SESSION["ErrorMessage"]= "Post Title should be greater than 5 characters";
     Redirect_to("AddNewPost.php");
-  }elseif (strlen($PostText)>9999) {
+  }elseif (strlen($PostText)>999) {
     $_SESSION["ErrorMessage"]= "Post Description should be less than than 1000 characters";
     Redirect_to("AddNewPost.php");
   }else{

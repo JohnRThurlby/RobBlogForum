@@ -209,7 +209,9 @@
               <h2 class="lead text-center">Forum</h2>
             </div>
             <div class="card-body">
-              <button type="button" class="btn btn-success btn-block text-center text-white mb-4" name="button"><a href="Forumregister.php" class="page-link"></a>Join the Forum</button>
+              <a href="Forumregister.php" target="_blank">  <h6>Join the forum</h6> </a>
+              <a href="Forumlogin.php" target="_blank">  <h6>Log into the Forum</h6> </a>
+
               <button type="button" class="btn btn-danger btn-block text-center text-white mb-4" name="button">Login</button>
               <div class="input-group mb-3">
                 <input type="text" class="form-control" name="" placeholder="Enter your email"value="">

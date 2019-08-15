@@ -57,7 +57,15 @@ if( $Result==1 ){
   <!-- NAVBAR END -->
     
   <!-- HEADER -->
-    <header class="bg-dark text-white py-3">
+  <header class="bg-dark text-white py-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 class="text-center"><i class="fas fa-edit" style="color:#27aae1;"></i> Question Details</h1>
+        </div>
+      </div>
+    </div>
+  </header>
       <div class="container">
         <div class="row">
           <div class="col-md-12">
@@ -82,9 +90,6 @@ if( $Result==1 ){
         
         </div>
       </div>
-    </header>
-    <!-- HEADER END -->
-    
 
     <!-- FOOTER -->
     <?php require("footerblog.php"); ?>

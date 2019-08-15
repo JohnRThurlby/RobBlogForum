@@ -2,10 +2,45 @@
 <?php require_once("Includes/Functions.php"); ?>
 <?php require_once("Includes/Sessions.php"); ?>
 <?php
-if(isset($_GET["id"])){
-  $SearchQueryParameter = $_GET["id"];}
-  
-?>
+$_SESSION["TrackingURL"]=$_SERVER["PHP_SELF"];
+ Confirm_Login(); ?>
+<?php
+if(isset($_POST["Submit"])){
+  $SubTopic = $_POST["SubTopicName"];
+  $SubDesc  = $_POST["SubTopicDesc"];
+  $Admin = $_SESSION["UserName"];
+
+  if(empty($SubTopic) || empty($SubDesc) ){
+    $_SESSION["ErrorMessage"]= "All fields must be filled out";
+    Redirect_to("Subtopics.php");
+  }elseif (strlen($SubTopic)<3) {
+    $_SESSION["ErrorMessage"]= "Subtopic title should be greater than 2 characters";
+    Redirect_to("SubTopics.php");
+  }elseif (strlen($SubTopic)>49) {
+    $_SESSION["ErrorMessage"]= "Subtopic title should be less than than 50 characters";
+    Redirect_to("SubTopics.php");
+  }else{
+    // Query to insert topic in DB When everything is fine
+    $ConnectingDB;
+    $sql = "INSERT INTO sutopic(subtopic_name,subtopic_description,s_status,topic_id)";
+    $sql .= "VALUES(:subtopicName,:subtopicDesc,:subtopicStatus,:topicId)";
+    $stmt = $ConnectingDB->prepare($sql);
+    $stmt->bindValue(':subtopicName',$SubTopic);
+    $stmt->bindValue(':subtopicDesc',$SubDesc);
+    $stmt->bindValue(':subtopicStatus','tr');
+    $stmt->bindValue(':topicId',$TopicId);
+    $Execute=$stmt->execute();
+
+    if($Execute){
+      $_SESSION["SuccessMessage"]="Subtopic : " .$SubTopic." added Successfully";
+      Redirect_to("SubTopics.php");
+    }else {
+      $_SESSION["ErrorMessage"]= "Something went wrong. Try Again !";
+      Redirect_to("SubTopics.php");
+    }
+  }
+} //Ending of Submit Button If-Condition
+ ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -61,6 +96,7 @@ if(isset($_GET["id"])){
       $ConnectingDB;
       if(isset($_GET["id"])){
         $SearchQueryParameter = $_GET["id"];
+        $TopicId = $_GET["id"];
         $sql = "SELECT topic_name FROM topic  WHERE topic_id = $SearchQueryParameter LIMIT 1";
         $stmt   =  $ConnectingDB->prepare($sql);
         $stmt   -> execute();

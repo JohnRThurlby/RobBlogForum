@@ -2,50 +2,40 @@
 <?php require_once("Includes/Functions.php"); ?>
 <?php require_once("Includes/Sessions.php"); ?>
 <?php
-$UserName    = @$_POST['Username'];
-$PassWord    = @$_POST['Password'];
-$PassEncrypt = sha1($PassWord);
-$RePassWord  = @$_POST['RePassword'];
-$Email       = @$_POST['Email'];
 
 if (isset($_POST['submit']))
 {
+  $UserName    = $_POST['Username'];
+  $PassWord    = $_POST['Password'];
+  $RePassWord  = $_POST['RePassword'];
+  $Email       = $_POST['Email'];
+
   date_default_timezone_set("America/New_York");
-  $CurrentTime = time();
-  $date        = date("Y-m-d");
+  $CurrentTime=time();
+  $DateTime=strftime("%B-%d-%Y %H:%M:%S",$CurrentTime);
 
-  $Login_in   = true;
   if(empty($UserName)||empty($PassWord)||empty($RePassWord)){
-    $_SESSION["ErrorMessage"]= "All fields must be filled out";
-    $Login_in = false;
+    $_SESSION["ErrorMessage"] = "All fields must be filled out correctly";
     Redirect_to("Forumregister.php");
-    
-  }  
-  if (strlen($PassWord)<8) {
-    $_SESSION["ErrorMessage"]= "Password should be greater than 7 characters";
-    $Login_in = false;
+  } elseif (strlen($PassWord)<8) {
+    $_SESSION["ErrorMessage"] = "Password should be greater than 7 characters";
     Redirect_to("Forumregister.php");
-  }
-  if ($PassWord !== $RePassWord) {
-    $_SESSION["ErrorMessage"]= "Password and Confirm Password should match";
-    $Login_in = false;
+  } elseif ($PassWord != $RePassWord) {
+    $_SESSION["ErrorMessage"] = "Password and Confirm Password should match";
     Redirect_to("Forumregister.php");
-  }
-  if (CheckForumUserNameExistsOrNot($UserName)) {
-    $_SESSION["ErrorMessage"]= "Username Exists. Try Another One! ";
-    $Login_in = false;
+  } elseif (CheckForumUserNameExistsOrNot($UserName)) {
+    $_SESSION["ErrorMessage"] = "Username Exists. Try Another One! ";
     Redirect_to("Forumregister.php");
-  }  
-  if ($Login_in) {
-    $ConnectingDB;
+  } else {  
+    $PassEncrypt = sha1($PassWord);
+    global $ConnectingDB;
     $sql = "INSERT INTO users(username,password,email,date)";
-    $sql .= "VALUES(:username,:password,:email,:date)";
+    $sql .= "VALUES(:userName,:passWord,:emailUser,:dateTime)";
     $stmt = $ConnectingDB->prepare($sql);
-    $stmt->bindValue(':username',$UserName);
-    $stmt->bindValue(':password',$PassEncrypt);
-    $stmt->bindValue(':email',$Email);
-    $stmt->bindValue(':date',$date);
-
+    $stmt->bindValue(':userName',$UserName);
+    $stmt->bindValue(':passWord',$PassEncrypt);
+    $stmt->bindValue(':emailUser',$Email);
+    $stmt->bindValue(':dateTime',$DateTime);
     $Execute=$stmt->execute();
     if($Execute){
       $_SESSION["SuccessMessage"]="Username " .$UserName." registered successfully";
@@ -94,7 +84,7 @@ if (isset($_POST['submit']))
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-            <h1 class="text-center"><i  style="color:#696f72;"></i>Nerdy Techie Blog in PHP</h1>
+            <h1 class="text-center"><i  style="color:#696f72;"></i>Nerdy Techie Forum in PHP</h1>
           </div> <!-- END CONTAINER -->
         </div> <!-- END COL -->
       </div> <!-- END ROW -->
@@ -154,8 +144,6 @@ if (isset($_POST['submit']))
                     <input type="text" class="form-control" name="Email" id="Email" value="">
                   </div> <!-- END INPUT GROUP -->
                 <input type="submit" name="submit" class="btn btn-info btn-block" value="Register"> 
-                <h2 class="text-center"> or </h2>
-                <input type="submit" name="login" class="btn btn-info btn-block" value="Login"></a>
               </form> <!-- END FORM -->
             </div> <!-- END CARD BODY -->
           </div> <!-- END CARD -->

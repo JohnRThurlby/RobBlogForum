@@ -107,16 +107,12 @@
       <form class="" action="Questions.php" method="post">
         <div class="card bg-secondary text-light mb-3">
           <div class="card-header">
-            <h1 class="text-center">Add New Sub Topic</h1>
+            <h1 class="text-center">Add New Question</h1>
           </div>
           <div class="card-body bg-dark">
             <div class="form-group">
-              <label for="title"> <span class="FieldInfo"> SubTopic Name: </span></label>
-               <input class="form-control" type="text" name="SubTopicName" id="title" placeholder="Sub Topic Name" value="">
-            </div>
-            <div class="form-group">
-              <label for="title"> <span class="FieldInfo"> SubTopic Description: </span></label>
-               <input class="form-control" type="text" name="SubTopicDesc" id="title" placeholder="Sub Topic Description" value="">
+              <label for="title"> <span class="FieldInfo"> Question: </span></label>
+               <input class="form-control" type="text" name="QuestionDesc" id="title" placeholder="Question Description" value="">
             </div>
             <div class="row">
               
