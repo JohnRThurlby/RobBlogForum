@@ -1,2 +1,2 @@
 # RobBlogForum
-Blog anf Forum written in PHP ith MySQL
+Blog and Forum written in PHP with MySQL

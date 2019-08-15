@@ -69,7 +69,7 @@ if( $Result==1 ){
                 <div class="row">
                   <div class="col-lg-6 offset-lg-3 mb-2">
                     <h5 class="text-center"><?php echo $QuestDetail; ?></h5><br>
-                    <h5>Date Added: <?php echo $QuestDateTime; ?></h5>
+                    <h5>Date Added: <?php echo $QuestDateTime; ?></h5><br>
                     <h5 class="text-left">Number of Views: <?php echo $QuestViews; ?></h5><br>
                     <h5 class="text-left">Added By:        <?php echo $QuestUserId; ?></h5><br>
                     <h5 class="text-left">SubTopic:        <?php echo $QuestSubTopicId; ?></h5>
