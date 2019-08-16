@@ -3,7 +3,7 @@
 <?php require_once("Includes/Sessions.php"); ?>
 <?php
 
-if (isset($_POST['submit']))
+if (isset($_POST['Submit']))
 {
   $UserName    = $_POST['Username'];
   $PassWord    = $_POST['Password'];
@@ -20,7 +20,7 @@ if (isset($_POST['submit']))
   } elseif (strlen($PassWord)<8) {
     $_SESSION["ErrorMessage"] = "Password should be greater than 7 characters";
     Redirect_to("Forumregister.php");
-  } elseif ($PassWord != $RePassWord) {
+  } elseif ($PassWord !== $RePassWord) {
     $_SESSION["ErrorMessage"] = "Password and Confirm Password should match";
     Redirect_to("Forumregister.php");
   } elseif (CheckForumUserNameExistsOrNot($UserName)) {
@@ -143,7 +143,9 @@ if (isset($_POST['submit']))
                     </div> <!-- END INPUT GROUP PREPEND -->
                     <input type="text" class="form-control" name="Email" id="Email" value="">
                   </div> <!-- END INPUT GROUP -->
-                <input type="submit" name="submit" class="btn btn-info btn-block" value="Register"> 
+                  <button type="submit" name="Submit" class="btn btn-success btn-block">
+                  <i class="fas fa-check"></i> Register
+                </button>
               </form> <!-- END FORM -->
             </div> <!-- END CARD BODY -->
           </div> <!-- END CARD -->

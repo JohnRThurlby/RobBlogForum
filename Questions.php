@@ -1,7 +1,49 @@
 <?php require_once("Includes/DB.php"); ?>
 <?php require_once("Includes/Functions.php"); ?>
 <?php require_once("Includes/Sessions.php"); ?>
+<?php
+if(isset($_POST["Submit"])){
+  $QuestHead = $_POST["QuestionHead"];
+  $QuestDesc = $_POST["QuestionDesc"];
+  $Admin = $_SESSION["UserName"];
+  date_default_timezone_set("America/New_York");
+  $CurrentTime=time();
+  $DateTime=strftime("%B-%d-%Y %H:%M:%S",$CurrentTime);
 
+  if(empty($QuestHead) || empty($QuestDesc) ){
+    $_SESSION["ErrorMessage"]= "All fields must be filled out";
+    Redirect_to("Questions.php");
+  }elseif (strlen($QuestHead)<3) {
+    $_SESSION["ErrorMessage"]= "Question Header should be greater than 2 characters";
+    Redirect_to("Questions.php");
+  }elseif (strlen($QuestHead)>49) {
+    $_SESSION["ErrorMessage"]= "Question Header should be less than than 50 characters";
+    Redirect_to("Questions.php");
+  }else{
+    // Query to insert topic in DB When everything is fine
+    global $ConnectingDB;
+    $sql = "INSERT INTO question(heading,question_detail,datetime,user_id,subtopic_id,views)";
+    $sql .= "VALUES(:headingDesc,:questDesc,:dateTime,:userId,:subTopicId,views)";
+    $stmt = $ConnectingDB->prepare($sql);
+    $stmt -> bindValue(':headingDesc',$QuestHead);
+    $stmt -> bindValue(':questDesc',$QuestDesc);
+    $stmt -> bindValue(':dateTime',$DateTime);
+    $stmt -> bindValue(':userId',5);
+    $stmt -> bindValue(':subTopicId',7);
+    $stmt -> bindValue(':views',0);
+
+    $Execute=$stmt->execute();
+
+    if($Execute){
+      $_SESSION["SuccessMessage"]="Question : " .$QuestHead." added Successfully";
+      Redirect_to("Questions.php");
+    }else {
+      $_SESSION["ErrorMessage"]= "Something went wrong. Try Again !";
+      Redirect_to("Questions.php");
+    }
+  }
+} //Ending of Submit Button If-Condition
+ ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -110,6 +152,10 @@
             <h1 class="text-center">Add New Question</h1>
           </div>
           <div class="card-body bg-dark">
+          <div class="form-group">
+              <label for="title"> <span class="FieldInfo"> Question Heading: </span></label>
+               <input class="form-control" type="text" name="QuestionHead" id="title" placeholder="Question Heading" value="">
+            </div>
             <div class="form-group">
               <label for="title"> <span class="FieldInfo"> Question: </span></label>
                <input class="form-control" type="text" name="QuestionDesc" id="title" placeholder="Question Description" value="">

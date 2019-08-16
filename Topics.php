@@ -1,9 +1,7 @@
 <?php require_once("Includes/DB.php"); ?>
 <?php require_once("Includes/Functions.php"); ?>
 <?php require_once("Includes/Sessions.php"); ?>
-<?php
-$_SESSION["TrackingURL"]=$_SERVER["PHP_SELF"];
- Confirm_Login(); ?>
+
 <?php
 if(isset($_POST["Submit"])){
   $Topic = $_POST["TopicTitle"];
@@ -21,7 +19,7 @@ if(isset($_POST["Submit"])){
     Redirect_to("Topics.php");
   }else{
     // Query to insert topic in DB When everything is fine
-    $ConnectingDB;
+    global $ConnectingDB;
     $sql = "INSERT INTO topic(topic_name,topic_type)";
     $sql .= "VALUES(:topicName,:topicType)";
     $stmt = $ConnectingDB->prepare($sql);

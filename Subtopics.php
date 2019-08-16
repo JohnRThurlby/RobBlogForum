@@ -2,8 +2,8 @@
 <?php require_once("Includes/Functions.php"); ?>
 <?php require_once("Includes/Sessions.php"); ?>
 <?php
-$_SESSION["TrackingURL"]=$_SERVER["PHP_SELF"];
- Confirm_Login(); ?>
+// $_SESSION["TrackingURL"]=$_SERVER["PHP_SELF"];
+// Confirm_Forumlogin(); ?>
 <?php
 if(isset($_POST["Submit"])){
   $SubTopic = $_POST["SubTopicName"];
@@ -21,13 +21,15 @@ if(isset($_POST["Submit"])){
     Redirect_to("SubTopics.php");
   }else{
     // Query to insert topic in DB When everything is fine
-    $ConnectingDB;
+    global $ConnectingDB;
+    $TopicId = '29';
+    $SubTopicStatus = "tr";
     $sql = "INSERT INTO sutopic(subtopic_name,subtopic_description,s_status,topic_id)";
     $sql .= "VALUES(:subtopicName,:subtopicDesc,:subtopicStatus,:topicId)";
     $stmt = $ConnectingDB->prepare($sql);
     $stmt->bindValue(':subtopicName',$SubTopic);
     $stmt->bindValue(':subtopicDesc',$SubDesc);
-    $stmt->bindValue(':subtopicStatus','tr');
+    $stmt->bindValue(':subtopicStatus',$SubTopicStatus);
     $stmt->bindValue(':topicId',$TopicId);
     $Execute=$stmt->execute();
 
@@ -140,7 +142,7 @@ if(isset($_POST["Submit"])){
        echo ErrorMessage();
        echo SuccessMessage();
        ?>
-      <form class="" action="Topics.php" method="post">
+      <form class="" action="Subtopics.php" method="post">
         <div class="card bg-secondary text-light mb-3">
           <div class="card-header">
             <h1 class="text-center">Add New Sub Topic</h1>
