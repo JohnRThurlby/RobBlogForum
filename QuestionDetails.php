@@ -1,32 +1,29 @@
 <?php require_once("Includes/DB.php"); ?>
 <?php require_once("Includes/Functions.php"); ?>
 <?php require_once("Includes/Sessions.php"); ?>
-<!-- Fetching Existing Data -->
 <?php
-    $SearchQueryParameter = $_GET["id"];
-    global   $ConnectingDB;
-    $sql    =  "SELECT * FROM question WHERE question_id = $SearchQueryParameter";
-    $stmt   =  $ConnectingDB->prepare($sql);
-    $stmt   -> execute();
-    $Result = $stmt->rowcount();
-if( $Result==1 ){
-  while ( $DataRows   = $stmt->fetch() ) {
-    $QuestId          = $DataRows["question_id"];
-    $QuestHead        = $DataRows["heading"];
-    $QuestDetail      = $DataRows["question_detail"];
-    $QuestDateTime    = $DataRows["datetime"];
-    $QuestUserId      = $DataRows["user_id"];
-    $QuestSubTopicId  = $DataRows["subtopic_id"];
-    $QuestViews       = $DataRows["views"];
-
+  $SearchQueryParameter = $_GET["id"];
+  global   $ConnectingDB;
+  $sql    =  "SELECT * FROM question WHERE question_id = $SearchQueryParameter";
+  $stmt   =  $ConnectingDB->prepare($sql);
+  $stmt   -> execute();
+  $Result = $stmt->rowcount();
+  if( $Result==1 ){
+    while ( $DataRows   = $stmt->fetch() ) {
+      $QuestId          = $DataRows["question_id"];
+      $QuestHead        = $DataRows["heading"];
+      $QuestDetail      = $DataRows["question_detail"];
+      $QuestDateTime    = $DataRows["datetime"];
+      $QuestUserId      = $DataRows["user_id"];
+      $QuestSubTopicId  = $DataRows["subtopic_id"];
+      $QuestViews       = $DataRows["views"];
+    }
+  }else {
+    $_SESSION["ErrorMessage"]="Bad Request !!";
+    Redirect_to("Questions.php");
   }
-}else {
-  $_SESSION["ErrorMessage"]="Bad Request !!";
-  Redirect_to("Questions.php");
-}
+?>
 
-
- ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,24 +45,23 @@ if( $Result==1 ){
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <link rel="stylesheet" href="Css/Styles.css">
     
-    <title>John Thurlby Blog</title>
+    <title>John Thurlby Forum</title>
 
   </head>  <!-- end head -->
-<body>
-  <!-- NAVBAR -->
-    <?php require("navbarforum.php"); ?>
-  <!-- NAVBAR END -->
+  <body>
+    <!-- NAVBAR -->
+      <?php require("navbarforum.php"); ?>
+    <!-- NAVBAR END -->
     
-  <!-- HEADER -->
-  <header class="bg-dark text-white py-3">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <h1 class="text-center"><i class="fas fa-edit" style="color:#27aae1;"></i> Question Details</h1>
+    <!-- HEADER -->
+    <header class="bg-dark text-white py-3">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <h1 class="text-center"><i class="fas fa-edit" style="color:#27aae1;"></i> Question Details</h1>
+          </div>
         </div>
       </div>
-    </div>
-  </header>
       <div class="container">
         <div class="row">
           <div class="col-md-12">
@@ -85,14 +81,81 @@ if( $Result==1 ){
                 </div>
               </div>
             </div>
-              
           </div>
-        
         </div>
       </div>
+    </header>
 
+    <!-- Main Area -->
+    <section class="container py-2 mb-4">
+
+      <table class="table table-striped table-hover">
+        <thead class="thead-dark">
+          <tr>
+            <th>Reply</th>
+            <th>Added by</th>
+            <th>Date Added</th>
+            <th>Like?</th>
+          </tr>
+        </thead>
+        <?php
+          if(isset($_GET["id"])){
+            $SearchQueryParameter = $_GET["id"];
+            global   $ConnectingDB;
+            $sql    =  "SELECT * FROM answer WHERE question_id = $SearchQueryParameter ORDER BY datetime ASC";
+            $stmt   =  $ConnectingDB->prepare($sql);
+            $stmt   -> execute();
+            $Result = $stmt->rowcount();
+            $Execute = $ConnectingDB->query($sql); 
+            while ( $DataRows   = $stmt->fetch() ) {
+              $AnswerId         = $DataRows["answer_id"];
+              $Replied          = $DataRows["replied"];
+              $QuestionId       = $DataRows["question_id"];
+              $ReplyDetail      = $DataRows["answer_detail"];
+              $ReplyDateTime    = $DataRows["datetime"];
+              $ReplyUserId      = $DataRows["user_id"];
+              $ReplyLike        = $DataRows["like"];
+            ?>
+            <tbody>
+              <tr>
+                <td><?php echo htmlentities($Replied); ?></td>
+                <td><?php echo htmlentities($ReplyDetail); ?></td>
+                <td><?php echo htmlentities($ReplyDateTime); ?></td>
+                <td><?php echo htmlentities($ReplyLike); ?></td>
+              </tr>
+            </tbody>
+          <?php }} ?>
+      </table>
+      <div class="row">
+      <div class="offset-lg-1 col-lg-10" style="min-height:400px;">
+      <?php
+      echo ErrorMessage();
+      echo SuccessMessage();
+      ?>
+      <form class="" action="Questions.php" method="post">
+        <div class="card bg-secondary text-light mb-3">
+          <div class="card-header">
+            <h1 class="text-center">Add a Reply</h1>
+          </div>
+          <div class="card-body bg-dark">
+            <div class="form-group">
+              <label for="title"> <span class="FieldInfo"> Reply: </span></label>
+              <input class="form-control" type="text" name="ReplyDetails" id="title" placeholder="Reply" value="">
+            </div>
+            <div class="row">
+              
+              <div class="col-lg-6 offset-lg-3 mb-2">
+                <button type="submit" name="Submit" class="btn btn-success btn-block">
+                  <i class="fas fa-check"></i> Add Reply
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+    </section>
     <!-- FOOTER -->
     <?php require("footerblog.php"); ?>
-        
   </body>    <!-- END BODY -->
 </html> <!-- END HTML -->

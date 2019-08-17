@@ -133,7 +133,7 @@ if(isset($_POST["Submit"])){
           <td><?php echo htmlentities($QuestTime); ?></td>
           <td><?php echo htmlentities($Views); ?></td>
           <td style="min-width:100px;"> <a class="btn btn-primary"href="QuestionDetails.php?id=<?php echo $QuestId; ?>" target="_blank">Detailed</a> </td>
-          <td style="min-width:100px;"> <a class="btn btn-primary"href="Reply.php?id=<?php echo $QuestId; ?>" target="_blank">Reply</a> </td>
+          <td style="min-width:100px;"> <a class="btn btn-primary"href="QuestionDetails.php?id=<?php echo $QuestId; ?>" target="_blank">Reply</a> </td>
 
       </tbody>
       <?php } ?>

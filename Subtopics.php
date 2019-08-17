@@ -15,10 +15,10 @@ if(isset($_POST["Submit"])){
     Redirect_to("Subtopics.php");
   }elseif (strlen($SubTopic)<3) {
     $_SESSION["ErrorMessage"]= "Subtopic title should be greater than 2 characters";
-    Redirect_to("SubTopics.php");
+    Redirect_to("Subtopics.php");
   }elseif (strlen($SubTopic)>49) {
     $_SESSION["ErrorMessage"]= "Subtopic title should be less than than 50 characters";
-    Redirect_to("SubTopics.php");
+    Redirect_to("Subtopics.php");
   }else{
     // Query to insert topic in DB When everything is fine
     global $ConnectingDB;
@@ -32,13 +32,12 @@ if(isset($_POST["Submit"])){
     $stmt->bindValue(':subtopicStatus',$SubTopicStatus);
     $stmt->bindValue(':topicId',$TopicId);
     $Execute=$stmt->execute();
-
     if($Execute){
       $_SESSION["SuccessMessage"]="Subtopic : " .$SubTopic." added Successfully";
-      Redirect_to("SubTopics.php");
+      Redirect_to("Subtopics.php");
     }else {
-      $_SESSION["ErrorMessage"]= "Something went wrong. Try Again !";
-      Redirect_to("SubTopics.php");
+      $_SESSION["ErrorMessage"]= "Something went wrong with the insert. Try Again !";
+      Redirect_to("Subtopics.php");
     }
   }
 } //Ending of Submit Button If-Condition
