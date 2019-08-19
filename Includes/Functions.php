@@ -4,6 +4,7 @@ function Redirect_to($New_Location){
   header("Location:".$New_Location);
   exit;
 }
+
 function CheckUserNameExistsOrNot($UserName){
   global $ConnectingDB;
   $sql    = "SELECT username FROM admins WHERE username=:userName";
@@ -17,6 +18,7 @@ function CheckUserNameExistsOrNot($UserName){
     return false;
   }
 }
+
 function CheckForumUserNameExistsOrNot($UserName){
   global $ConnectingDB;
   $sql    = "SELECT username FROM users WHERE username=:userName";
@@ -30,6 +32,34 @@ function CheckForumUserNameExistsOrNot($UserName){
     return false;
   }
 }
+
+function GetForumUserName($QuestUserId){
+  global $ConnectingDB;
+  $sql    = "SELECT * FROM user WHERE user_id=:userId LIMIT 1";
+  $stmt   = $ConnectingDB->prepare($sql);
+  $stmt->bindValue(':userId',$QuestUserId);
+  $stmt->execute();
+  $Result = $stmt->rowcount();
+  if ($Result==1) {
+    return $Found_Name=$stmt->fetch();
+  }else {
+    return null;
+  }
+}
+function GetSubTopicName($SubId){
+  global $ConnectingDB;
+  $sql    = "SELECT * FROM subtopic WHERE subtopic_id=:subId LIMIT 1";
+  $stmt   = $ConnectingDB->prepare($sql);
+  $stmt->bindValue(':subId',$SubId);
+  $stmt->execute();
+  $Result = $stmt->rowcount();
+  if ($Result==1) {
+    return $Found_SubName=$stmt->fetch();
+  }else {
+    return null;
+  }
+}
+
 function Login_Attempt($UserName,$Password){
   global $ConnectingDB;
   $sql = "SELECT * FROM admins WHERE username=:userName AND password=:passWord LIMIT 1";
@@ -44,10 +74,11 @@ function Login_Attempt($UserName,$Password){
     return null;
   }
 }
+
 function ForumLogin_Attempt($UserName,$Password){
   $PassEncrypt = sha1($Password);
   global $ConnectingDB;
-  $sql = "SELECT * FROM users WHERE username=:userName AND password=:passWord LIMIT 1";
+  $sql = "SELECT * FROM user WHERE username=:userName AND password=:passWord LIMIT 1";
   $stmt = $ConnectingDB->prepare($sql);
   $stmt->bindValue(':userName',$UserName);
   $stmt->bindValue(':passWord',$PassEncrypt);
@@ -59,6 +90,7 @@ function ForumLogin_Attempt($UserName,$Password){
     return null;
   }
 }
+
 function Confirm_Login(){
 if (isset($_SESSION["UserId"])) {
   return true;
@@ -67,6 +99,7 @@ if (isset($_SESSION["UserId"])) {
   Redirect_to("Login.php");
 }
 }
+
 function Confirm_Forumlogin(){
   if (isset($_SESSION["UserId"])) {
     return true;

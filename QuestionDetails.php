@@ -73,10 +73,41 @@
                 <div class="row">
                   <div class="col-lg-6 offset-lg-3 mb-2">
                     <h5 class="text-center"><?php echo $QuestDetail; ?></h5><br>
-                    <h5>Date Added: <?php echo $QuestDateTime; ?></h5><br>
-                    <h5 class="text-left">Number of Views: <?php echo $QuestViews; ?></h5><br>
-                    <h5 class="text-left">Added By:        <?php echo $QuestUserId; ?></h5><br>
-                    <h5 class="text-left">SubTopic:        <?php echo $QuestSubTopicId; ?></h5>
+                    <table class="table table-striped table-hover">
+                      <thead class="thead-dark">
+                        <tr>
+                          <th>Date Added</th>
+                          <th>Added by</th>
+                          <th>Number of Views</th>
+                          <th>Subtopic</th>
+                        </tr>
+                      </thead>
+                      <?php 
+                        $Found_Name = GetForumUserName($QuestUserId); 
+                        if ($Found_Name) {
+                          $QuestUserName = $Found_Name["fullname"];
+                        }
+                        else {
+                          $QuestUserName = "Not available";
+                        }  // END ELSE
+
+                        $Found_SubName = GetSubTopicName($QuestSubTopicId); 
+                        if ($Found_SubName) {
+                          $QuestSubTopicName = $Found_SubName["subtopic_name"];
+                        }
+                        else {
+                          $QuestSubTopicName = "Not available";
+                        }  // END ELSE
+                      ?> 
+                      <tbody>
+                        <tr>
+                          <td><?php echo htmlentities($QuestDateTime); ?></td>
+                          <td><?php echo htmlentities($QuestUserName); ?></td> 
+                          <td><?php echo htmlentities($QuestSubTopicName); ?></td>
+                          <td><?php echo htmlentities($QuestViews); ?></td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
@@ -95,6 +126,7 @@
             <th>Reply</th>
             <th>Added by</th>
             <th>Date Added</th>
+            <th>No. of Likes</th>
             <th>Like?</th>
           </tr>
         </thead>
@@ -114,14 +146,22 @@
               $ReplyDetail      = $DataRows["answer_detail"];
               $ReplyDateTime    = $DataRows["datetime"];
               $ReplyUserId      = $DataRows["user_id"];
+              $Found_Name = GetForumUserName($ReplyUserId); 
+              if ($Found_Name) {
+                $ReplyUserName = $Found_Name["fullname"];
+              }
+              else {
+                $ReplyUserName = "Not available";
+              }  // END ELSE
               $ReplyLike        = $DataRows["like"];
             ?>
             <tbody>
               <tr>
-                <td><?php echo htmlentities($Replied); ?></td>
                 <td><?php echo htmlentities($ReplyDetail); ?></td>
+                <td><?php echo htmlentities($ReplyUserName); ?></td>
                 <td><?php echo htmlentities($ReplyDateTime); ?></td>
                 <td><?php echo htmlentities($ReplyLike); ?></td>
+                <td style="min-width:100px;"> <a class="btn btn-primary"href="UpdateQuestLike.php?id=<?php echo $AnswerId; ?>" target="_blank">Like?</a> </td>
               </tr>
             </tbody>
           <?php }} ?>
