@@ -3,7 +3,7 @@
 <?php require_once("Includes/Sessions.php"); ?>
 <?php
 
-if (isset($_POST['Submit']))
+if (isset($_POST['submit']))
 {
   $UserName    = $_POST['Username'];
   $PassWord    = $_POST['Password'];
@@ -143,7 +143,7 @@ if (isset($_POST['Submit']))
                     </div> <!-- END INPUT GROUP PREPEND -->
                     <input type="text" class="form-control" name="Email" id="Email" value="">
                   </div> <!-- END INPUT GROUP -->
-                  <button type="submit" name="Submit" class="btn btn-success btn-block">
+                  <button type="submit" name="submit" class="btn btn-success btn-block">
                   <i class="fas fa-check"></i> Register
                 </button>
               </form> <!-- END FORM -->

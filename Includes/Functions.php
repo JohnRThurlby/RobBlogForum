@@ -1,4 +1,5 @@
 <?php require_once("Includes/DB.php"); ?>
+
 <?php
 function Redirect_to($New_Location){
   header("Location:".$New_Location);
@@ -7,7 +8,7 @@ function Redirect_to($New_Location){
 
 function CheckUserNameExistsOrNot($UserName){
   global $ConnectingDB;
-  $sql    = "SELECT username FROM admins WHERE username=:userName";
+  $sql    = "SELECT * FROM admins WHERE username=:userName";
   $stmt   = $ConnectingDB->prepare($sql);
   $stmt->bindValue(':userName',$UserName);
   $stmt->execute();
@@ -21,7 +22,7 @@ function CheckUserNameExistsOrNot($UserName){
 
 function CheckForumUserNameExistsOrNot($UserName){
   global $ConnectingDB;
-  $sql    = "SELECT username FROM users WHERE username=:userName";
+  $sql    = "SELECT * FROM user WHERE username=:userName";
   $stmt   = $ConnectingDB->prepare($sql);
   $stmt->bindValue(':userName',$UserName);
   $stmt->execute();

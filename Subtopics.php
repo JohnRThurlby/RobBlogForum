@@ -8,36 +8,35 @@
 if(isset($_POST["Submit"])){
   $SubTopic = $_POST["SubTopicName"];
   $SubDesc  = $_POST["SubTopicDesc"];
-  $Admin = $_SESSION["UserName"];
+  $SubOrigTopic = $_POST["Origtopic"];
+  $SubTopicStatus = "tr";
 
   if(empty($SubTopic) || empty($SubDesc) ){
     $_SESSION["ErrorMessage"]= "All fields must be filled out";
-    Redirect_to("Subtopics.php");
+    Redirect_to("Subtopics.php?id=".$SubOrigTopic);
   }elseif (strlen($SubTopic)<3) {
     $_SESSION["ErrorMessage"]= "Subtopic title should be greater than 2 characters";
-    Redirect_to("Subtopics.php");
+    Redirect_to("Subtopics.php?id=".$SubOrigTopic);
   }elseif (strlen($SubTopic)>49) {
     $_SESSION["ErrorMessage"]= "Subtopic title should be less than than 50 characters";
-    Redirect_to("Subtopics.php");
+    Redirect_to("Subtopics.php?id=".$SubOrigTopic);
   }else{
-    // Query to insert topic in DB When everything is fine
+    // Query to insert subtopic in DB When everything is fine
     global $ConnectingDB;
-    $TopicId = '29';
-    $SubTopicStatus = "tr";
-    $sql = "INSERT INTO sutopic(subtopic_name,subtopic_description,s_status,topic_id)";
+    $sql = "INSERT INTO subtopic(subtopic_name,subtopic_description,s_status,topic_id)";
     $sql .= "VALUES(:subtopicName,:subtopicDesc,:subtopicStatus,:topicId)";
     $stmt = $ConnectingDB->prepare($sql);
     $stmt->bindValue(':subtopicName',$SubTopic);
     $stmt->bindValue(':subtopicDesc',$SubDesc);
     $stmt->bindValue(':subtopicStatus',$SubTopicStatus);
-    $stmt->bindValue(':topicId',$TopicId);
+    $stmt->bindValue(':topicId',$SubOrigTopic);
     $Execute=$stmt->execute();
     if($Execute){
       $_SESSION["SuccessMessage"]="Subtopic : " .$SubTopic." added Successfully";
-      Redirect_to("Subtopics.php");
+      Redirect_to("Subtopics.php?id=".$SubOrigTopic);
     }else {
-      $_SESSION["ErrorMessage"]= "Something went wrong with the insert. Try Again !";
-      Redirect_to("Subtopics.php");
+      $_SESSION["ErrorMessage"]= "Something went wrong. Try Again !";
+      Redirect_to("Subtopics.php?id=".$SubOrigTopic);
     }
   }
 } //Ending of Submit Button If-Condition
@@ -109,9 +108,10 @@ if(isset($_POST["Submit"])){
           <h3 class="text-center"><?php echo $TopicName; ?></h3>
         <?php }else {
           $_SESSION["ErrorMessage"]="Bad Request !!";
-          Redirect_to("Blog.php?page=1");
+          Redirect_to("Subtopics.php?page=1");
         }
         $sql = "SELECT * FROM subtopic  WHERE topic_id = $SearchQueryParameter ORDER BY subtopic_id asc";
+        $OrigTopic = $SearchQueryParameter;
       }
       else { 
         $sql = "SELECT * FROM subtopic ORDER BY subtopic_id asc";
@@ -147,6 +147,7 @@ if(isset($_POST["Submit"])){
             <h1 class="text-center">Add New Sub Topic</h1>
           </div>
           <div class="card-body bg-dark">
+            <input type="hidden" id="Origtopic" name="Origtopic" value="<?php echo $OrigTopic; ?>">
             <div class="form-group">
               <label for="title"> <span class="FieldInfo"> SubTopic Name: </span></label>
                <input class="form-control" type="text" name="SubTopicName" id="title" placeholder="Sub Topic Name" value="">

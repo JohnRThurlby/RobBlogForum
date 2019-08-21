@@ -5,41 +5,43 @@
 if(isset($_POST["Submit"])){
   $QuestHead = $_POST["QuestionHead"];
   $QuestDesc = $_POST["QuestionDesc"];
+  $OriginalTopic = $_POST["OrigSubtopic"];
   $Admin = $_SESSION["UserName"];
   date_default_timezone_set("America/New_York");
   $CurrentTime=time();
   $DateTime=strftime("%B-%d-%Y %H:%M:%S",$CurrentTime);
+  $UserId = 5;
+  $Views = 0;
 
   if(empty($QuestHead) || empty($QuestDesc) ){
     $_SESSION["ErrorMessage"]= "All fields must be filled out";
-    Redirect_to("Questions.php");
+    Redirect_to("Questions.php?id=".$OriginalTopic);
   }elseif (strlen($QuestHead)<3) {
     $_SESSION["ErrorMessage"]= "Question Header should be greater than 2 characters";
-    Redirect_to("Questions.php");
+    Redirect_to("Questions.php?id=".$OriginalTopic);
   }elseif (strlen($QuestHead)>49) {
     $_SESSION["ErrorMessage"]= "Question Header should be less than than 50 characters";
-    Redirect_to("Questions.php");
+    Redirect_to("Questions.php?id=".$OriginalTopic);
   }else{
-    // Query to insert topic in DB When everything is fine
+    // Query to insert question in DB When everything is fine
     global $ConnectingDB;
-    $sql = "INSERT INTO question(heading,question_detail,datetime,user_id,subtopic_id,views)";
-    $sql .= "VALUES(:headingDesc,:questDesc,:dateTime,:userId,:subTopicId,views)";
+    $sql = "INSERT INTO question(heading,question_detail,dateadded,user_id,subtopic_id,views)";
+    $sql .= "VALUES(:headingDesc,:questInfo,:dateAddTime,:userAdd,:subTopicId,:numViews)";
     $stmt = $ConnectingDB->prepare($sql);
-    $stmt -> bindValue(':headingDesc',$QuestHead);
-    $stmt -> bindValue(':questDesc',$QuestDesc);
-    $stmt -> bindValue(':dateTime',$DateTime);
-    $stmt -> bindValue(':userId',5);
-    $stmt -> bindValue(':subTopicId',7);
-    $stmt -> bindValue(':views',0);
-
+    $stmt->bindValue(':headingDesc',$QuestHead);
+    $stmt->bindValue(':questInfo',$QuestDesc);
+    $stmt->bindValue(':dateAddTime',$DateTime);
+    $stmt->bindValue(':userAdd',$UserId);
+    $stmt->bindValue(':subTopicId',$OriginalTopic);
+    $stmt->bindValue(':numViews',$Views);
+    
     $Execute=$stmt->execute();
-
     if($Execute){
       $_SESSION["SuccessMessage"]="Question : " .$QuestHead." added Successfully";
-      Redirect_to("Questions.php");
+      Redirect_to("Questions.php?id=".$OriginalTopic);
     }else {
       $_SESSION["ErrorMessage"]= "Something went wrong. Try Again !";
-      Redirect_to("Questions.php");
+      Redirect_to("Questions.php?id=".$OriginalTopic);
     }
   }
 } //Ending of Submit Button If-Condition
@@ -113,17 +115,18 @@ if(isset($_POST["Submit"])){
           $_SESSION["ErrorMessage"]="Bad Request !!";
           Redirect_to("Questions.php?page=1");
         }
-        $sql = "SELECT * FROM question  WHERE subtopic_id = $SearchQueryParameter ORDER BY datetime ASC";
+        $sql = "SELECT * FROM question  WHERE subtopic_id = $SearchQueryParameter ORDER BY dateadded ASC";
+        $OrigSubTopic = $SearchQueryParameter;
       }
       else { 
-        $sql = "SELECT * FROM question ORDER BY datetime ASC";
+        $sql = "SELECT * FROM question ORDER BY dateadded ASC";
       }
       $Execute = $ConnectingDB->query($sql); 
       while ($DataRows = $Execute->fetch()) {
         $QuestId   = $DataRows["question_id"];
         $Heading   = $DataRows["heading"];
         $QuestionDetail = $DataRows["question_detail"];
-        $QuestTime = $DataRows["datetime"];
+        $QuestTime = $DataRows["dateadded"];
         $Views    = $DataRows["views"];
       ?>
       <tbody>
@@ -152,6 +155,7 @@ if(isset($_POST["Submit"])){
             <h1 class="text-center">Add New Question</h1>
           </div>
           <div class="card-body bg-dark">
+          <input type="hidden" id="OrigSubtopic" name="OrigSubtopic" value="<?php echo $OrigSubTopic; ?>">
           <div class="form-group">
               <label for="title"> <span class="FieldInfo"> Question Heading: </span></label>
                <input class="form-control" type="text" name="QuestionHead" id="title" placeholder="Question Heading" value="">

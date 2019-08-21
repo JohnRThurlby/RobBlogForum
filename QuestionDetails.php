@@ -2,28 +2,45 @@
 <?php require_once("Includes/Functions.php"); ?>
 <?php require_once("Includes/Sessions.php"); ?>
 <?php
-  $SearchQueryParameter = $_GET["id"];
-  global   $ConnectingDB;
-  $sql    =  "SELECT * FROM question WHERE question_id = $SearchQueryParameter";
-  $stmt   =  $ConnectingDB->prepare($sql);
-  $stmt   -> execute();
-  $Result = $stmt->rowcount();
-  if( $Result==1 ){
-    while ( $DataRows   = $stmt->fetch() ) {
-      $QuestId          = $DataRows["question_id"];
-      $QuestHead        = $DataRows["heading"];
-      $QuestDetail      = $DataRows["question_detail"];
-      $QuestDateTime    = $DataRows["datetime"];
-      $QuestUserId      = $DataRows["user_id"];
-      $QuestSubTopicId  = $DataRows["subtopic_id"];
-      $QuestViews       = $DataRows["views"];
-    }
-  }else {
-    $_SESSION["ErrorMessage"]="Bad Request !!";
-    Redirect_to("Questions.php");
-  }
-?>
+if(isset($_POST["Submit"])){
+  $ReplyDesc = $_POST["ReplyDetails"];
+  date_default_timezone_set("America/New_York");
+  $CurrentTime=time();
+  $DateTime=strftime("%B-%d-%Y %H:%M:%S",$CurrentTime);
 
+  if(empty($ReplyDesc)){
+    $_SESSION["ErrorMessage"]= "Reply must be filled out";
+    Redirect_to("QuestionDetails.php");
+  }elseif (strlen($ReplyDesc) < 5) {
+    $_SESSION["ErrorMessage"]= "Reply should be greater than 4 characters";
+    Redirect_to("QuestionDetails.php");
+  }elseif (strlen($ReplyDesc) > 2000) {
+    $_SESSION["ErrorMessage"]= "Reply should be less than than 2000 characters";
+    Redirect_to("QuestionDetails.php");
+  }else{
+    global $ConnectingDB;
+    $sql = "INSERT INTO answer(replied,question_id,answer_detail,datetime,user_id,numberlike)";
+    $sql .= "VALUES(:replied,:questId,:answerDetail,:dateTime,:userId,:numberlike)";
+    $stmt = $ConnectingDB->prepare($sql);
+    $stmt -> bindValue(':replied',0);
+    $stmt -> bindValue(':questId',$QuestionId);
+    $stmt -> bindValue(':answerDetail',$ReplyDesc);
+    $stmt -> bindValue(':dateTime',$DateTime);
+    $stmt -> bindValue(':userId',$QuestUserId);
+    $stmt -> bindValue(':numberlike',0);
+
+    $Execute=$stmt->execute();
+
+    if($Execute){
+      $_SESSION["SuccessMessage"]="Reply added Successfully";
+      Redirect_to("QuestionDetails.php");
+    }else {
+      $_SESSION["ErrorMessage"]= "Something went wrong. Try Again !";
+      Redirect_to("QuestionDetails.php");
+    }
+  }
+  } //Ending of Submit Button If-Condition
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -66,26 +83,49 @@
         <div class="row">
           <div class="col-md-12">
             <div class="card bg-light text-dark mb-3">
-              <div class="card-header">
-                <h1 class="text-center"><?php echo $QuestHead; ?></h1>
-              </div>
               <div >
                 <div class="row">
                   <div class="col-lg-6 offset-lg-3 mb-2">
+                  <?php
+                      $SearchQueryParameter = $_GET["id"];
+                      global   $ConnectingDB;
+                      $sql    =  "SELECT * FROM question WHERE question_id = $SearchQueryParameter";
+                      $stmt   =  $ConnectingDB->prepare($sql);
+                      $stmt   -> execute();
+                      $Result = $stmt->rowcount();
+                      if( $Result==1 ){
+                        while ( $DataRows   = $stmt->fetch() ) {
+                          $QuestId          = $DataRows["question_id"];
+                          $QuestHead        = $DataRows["heading"];
+                          $QuestDetail      = $DataRows["question_detail"];
+                          $QuestDateTime    = $DataRows["dateadded"];
+                          $QuestUserId      = $DataRows["user_id"];
+                          $QuestSubTopicId  = $DataRows["subtopic_id"];
+                          $QuestViews       = $DataRows["views"];
+                        }
+                      }else {
+                        $_SESSION["ErrorMessage"]="Bad Request !!";
+                        Redirect_to("QuestionDetails.php");
+                      }
+                    ?>
+                    <div class="card-header">
+                      <h1 class="text-center"><?php echo $QuestHead; ?></h1>
+                    </div>
                     <h5 class="text-center"><?php echo $QuestDetail; ?></h5><br>
                     <table class="table table-striped table-hover">
                       <thead class="thead-dark">
                         <tr>
                           <th>Date Added</th>
                           <th>Added by</th>
-                          <th>Number of Views</th>
                           <th>Subtopic</th>
+                          <th>Number of Views</th>
                         </tr>
                       </thead>
+                      
                       <?php 
                         $Found_Name = GetForumUserName($QuestUserId); 
                         if ($Found_Name) {
-                          $QuestUserName = $Found_Name["fullname"];
+                          $QuestUserName = $Found_Name["username"];
                         }
                         else {
                           $QuestUserName = "Not available";
@@ -134,6 +174,7 @@
           if(isset($_GET["id"])){
             $SearchQueryParameter = $_GET["id"];
             global   $ConnectingDB;
+            $QuestionId = $SearchQueryParameter;
             $sql    =  "SELECT * FROM answer WHERE question_id = $SearchQueryParameter ORDER BY datetime ASC";
             $stmt   =  $ConnectingDB->prepare($sql);
             $stmt   -> execute();
@@ -144,16 +185,16 @@
               $Replied          = $DataRows["replied"];
               $QuestionId       = $DataRows["question_id"];
               $ReplyDetail      = $DataRows["answer_detail"];
-              $ReplyDateTime    = $DataRows["datetime"];
+              $ReplyDateTime    = $DataRows["dateadded"];
               $ReplyUserId      = $DataRows["user_id"];
               $Found_Name = GetForumUserName($ReplyUserId); 
               if ($Found_Name) {
-                $ReplyUserName = $Found_Name["fullname"];
+                $ReplyUserName = $Found_Name["username"];
               }
               else {
                 $ReplyUserName = "Not available";
               }  // END ELSE
-              $ReplyLike        = $DataRows["like"];
+              $ReplyLike        = $DataRows["numberlike"];
             ?>
             <tbody>
               <tr>
@@ -161,7 +202,7 @@
                 <td><?php echo htmlentities($ReplyUserName); ?></td>
                 <td><?php echo htmlentities($ReplyDateTime); ?></td>
                 <td><?php echo htmlentities($ReplyLike); ?></td>
-                <td style="min-width:100px;"> <a class="btn btn-primary"href="UpdateQuestLike.php?id=<?php echo $AnswerId; ?>" target="_blank">Like?</a> </td>
+                <td style="min-width:100px;"> <a class="btn btn-primary"href="UpdateQuestLike.php?id=<?php echo $AnswerId; ?>&questid=<?php echo $QuestionId;?>" target="_blank">Like?</a> </td>
               </tr>
             </tbody>
           <?php }} ?>
@@ -172,7 +213,7 @@
       echo ErrorMessage();
       echo SuccessMessage();
       ?>
-      <form class="" action="Questions.php" method="post">
+      <form class="" action="QuestionDetails.php" method="post">
         <div class="card bg-secondary text-light mb-3">
           <div class="card-header">
             <h1 class="text-center">Add a Reply</h1>

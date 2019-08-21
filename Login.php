@@ -8,11 +8,10 @@
 if(isset($_SESSION["UserId"])){
   Redirect_to("Dashboard.php");
 }  // END ISSET SESSION
-
 // If global post is submit, check login 
 
 if (isset($_POST["Submit"])) 
-  {
+  { 
 
   $UserName = $_POST["Username"];
   $Password = $_POST["Password"];
@@ -113,7 +112,7 @@ if (isset($_POST["Submit"]))
             </div> <!-- END CARD HEADER -->
 
             <div class="card-body bg-dark">
-              <form class="" action="Login.php" method="post">
+              <form class="" action="Login.php" method="POST">
                 <div class="form-group">
                   <label for="username"><span class="FieldInfo">Username:</span></label>
                   <div class="input-group mb-3">
@@ -132,7 +131,9 @@ if (isset($_POST["Submit"]))
                     <input type="password" class="form-control" name="Password" id="password" value="">
                   </div> <!-- END INPUT GROUP -->
                 </div> <!-- END FORM GROUP -->
-                <input type="submit" name="Submit" class="btn btn-info btn-block" value="Login">
+                <button type="submit" name="submit" class="btn btn-success btn-block">
+                  <i class="fas fa-check"></i> Login
+                </button>
               </form> <!-- END FORM -->
             </div> <!-- END CARD BODY -->
           </div> <!-- END CARD -->
