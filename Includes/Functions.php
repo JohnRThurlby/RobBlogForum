@@ -20,11 +20,10 @@ function CheckUserNameExistsOrNot($UserName){
   }
 }
 
-function CheckForumUserNameExistsOrNot($UserName){
+function CheckForumUserExists($UserNme){
   global $ConnectingDB;
-  $sql    = "SELECT * FROM user WHERE username=:userName";
-  $stmt   = $ConnectingDB->prepare($sql);
-  $stmt->bindValue(':userName',$UserName);
+  $sql  = "SELECT * FROM user WHERE username='$UserNme'";
+  $stmt = $ConnectingDB->prepare($sql);
   $stmt->execute();
   $Result = $stmt->rowcount();
   if ($Result==1) {
@@ -76,13 +75,11 @@ function Login_Attempt($UserName,$Password){
   }
 }
 
-function ForumLogin_Attempt($UserName,$Password){
-  $PassEncrypt = sha1($Password);
+function ForumLogin_Attempt($UserName,$PassWord){
+  $PassEncrypt = sha1($PassWord);
   global $ConnectingDB;
-  $sql = "SELECT * FROM user WHERE username=:userName AND password=:passWord LIMIT 1";
+  $sql = "SELECT * FROM user WHERE username='$UserName' AND password='$PassWord'";
   $stmt = $ConnectingDB->prepare($sql);
-  $stmt->bindValue(':userName',$UserName);
-  $stmt->bindValue(':passWord',$PassEncrypt);
   $stmt->execute();
   $Result = $stmt->rowcount();
   if ($Result==1) {

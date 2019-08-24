@@ -22,6 +22,10 @@
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a href="Forumlogout.php" class="nav-link text-danger">
+              <i class="fas fa-user-times"></i> Logout</a></li>
+          </ul>
+      <ul class="navbar-nav ml-auto">
         <form class="form-inline d-none d-sm-block" action="Blog.php">
           <div class="form-group">
           <input class="form-control mr-2" type="text" name="Search" placeholder="Search here"value="">

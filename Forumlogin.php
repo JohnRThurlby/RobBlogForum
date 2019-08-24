@@ -15,27 +15,27 @@ if (isset($_POST["Submit"]))
   {
 
   $UserName = $_POST["Username"];
-  $Password = $_POST["Password"];
+  $PassWord = $_POST["Password"];
 
-  if (empty($UserName)||empty($Password)) {
+  if (empty($UserName)||empty($PassWord)) {
     $_SESSION["ErrorMessage"]= "All fields must be filled out";
     Redirect_to("Forumlogin.php");
   }    // END IF EITHER EMPTY 
   else 
     {
     // see if user is in DB by calling function
-    $Found_Account=ForumLogin_Attempt($UserName,$Password);
+    $Found_Account=ForumLogin_Attempt($UserName,$PassWord);
 
     if ($Found_Account) 
       {
-      $_SESSION["UserId"]=$Found_Account["id"];
+      $_SESSION["UserId"]=$Found_Account["user_id"];
       $_SESSION["UserName"]=$Found_Account["username"];
       if (isset($_SESSION["TrackingURL"])) {
         Redirect_to($_SESSION["TrackingURL"]);
       } // END FOUND ACCOUNT
       else
         {
-        Redirect_to("Forumlogin.php");
+        Redirect_to("Topics.php");
         }  // END ELSE
       }  // END ACCOUNT FOUND
     else 
@@ -130,9 +130,7 @@ if (isset($_POST["Submit"]))
                     <input type="password" class="form-control" name="Password" id="password" value="">
                   </div> <!-- END INPUT GROUP -->
                 </div> <!-- END FORM GROUP -->
-                <button type="submit" name="Submit" class="btn btn-success btn-block">
-                  <i class="fas fa-check"></i> Login
-                </button>
+                <input type="submit" name="Submit" class="btn btn-info btn-block" value="Login">
               </form> <!-- END FORM -->
             </div> <!-- END CARD BODY -->
           </div> <!-- END CARD -->

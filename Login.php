@@ -4,14 +4,11 @@
 <?php require_once("Includes/Sessions.php"); ?>
 
 <?php
-// If global session is set, send to dashboard 
 if(isset($_SESSION["UserId"])){
   Redirect_to("Dashboard.php");
-}  // END ISSET SESSION
-// If global post is submit, check login 
+}
 
-if (isset($_POST["Submit"])) 
-  { 
+if (isset($_POST["Submit"])) {
 
   $UserName = $_POST["Username"];
   $Password = $_POST["Password"];
@@ -19,34 +16,27 @@ if (isset($_POST["Submit"]))
   if (empty($UserName)||empty($Password)) {
     $_SESSION["ErrorMessage"]= "All fields must be filled out";
     Redirect_to("Login.php");
-  }    // END IF EITHER EMPTY 
-  else 
-    {
-    // see if user is in DB by calling function
+  }    // END IF EMPTY 
+  else {
+    // code for checking username and password from Database
     $Found_Account=Login_Attempt($UserName,$Password);
-
-    if ($Found_Account) 
-      {
+    if ($Found_Account) {
       $_SESSION["UserId"]=$Found_Account["id"];
       $_SESSION["UserName"]=$Found_Account["username"];
       $_SESSION["AdminName"]=$Found_Account["aname"];
       $_SESSION["SuccessMessage"]= "Welcome ".$_SESSION["AdminName"]."!";
       if (isset($_SESSION["TrackingURL"])) {
         Redirect_to($_SESSION["TrackingURL"]);
-      } // END FOUND ACCOUNT
-      else
-        {
-        Redirect_to("Dashboard.php");
-        }  // END ELSE
-      }  // END ACCOUNT FOUND
-    else 
-      {
+      }else{
+      Redirect_to("Dashboard.php");
+    }
+    }else {
       $_SESSION["ErrorMessage"]="Incorrect Username/Password";
       Redirect_to("Login.php");
-      } // END ELSE
-    } // END ELSE
-  } // END SUBMIT
-?>  <!-- END PHP -->
+    }
+  }
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -70,8 +60,7 @@ if (isset($_POST["Submit"]))
     
     <title>John Thurlby Blog</title>
 
-  </head>  <!-- END HEAD -->
-
+  </head>  <!-- end head -->
   <body>
     <!-- NAVBAR -->
     <div style="height:10px; background:#696f72;"></div>
@@ -82,86 +71,98 @@ if (isset($_POST["Submit"]))
       </nav>
       <div style="height:10px; background:#deebf0;"></div>
     <!-- NAVBAR END -->
-
     <!-- START HEADER -->
     <header class="bg-dark text-white py-5">
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-            <h1 class="text-center"><i  style="color:#696f72;"></i>Nerdy Techie Blog in PHP</h1>
+            <h1 class="text-center"><i  style="color:#696f72;"></i>My First Blog Page in PHP</h1>
           </div> <!-- END CONTAINER -->
         </div> <!-- END COL -->
       </div> <!-- END ROW -->
     </header> <!-- END HEADER -->
-
-    <!-- START MAIN CONTAINER -->
+    <!-- Main Area Start -->
     <section class="container py-2 mb-4">
       <div class="row">
         <div class="offset-sm-3 col-sm-6" style="min-height:500px;">
           <br><br><br>
-          
           <?php
           echo ErrorMessage();
           echo SuccessMessage();
-          ?> <!-- END PHP SCOPE -->
-
+          ?>
           <div class="card bg-secondary text-light">
-
             <div class="card-header">
-              <h4>Welcome Back!</h4>
-            </div> <!-- END CARD HEADER -->
-
-            <div class="card-body bg-dark">
-              <form class="" action="Login.php" method="POST">
+              <h4>Wellcome Back !</h4>
+              </div>
+              <div class="card-body bg-dark">
+              <form class="" action="Login.php" method="post">
                 <div class="form-group">
                   <label for="username"><span class="FieldInfo">Username:</span></label>
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text text-white bg-info"> <i class="fas fa-user"></i> </span>
-                    </div> <!-- END INPUT GROUP PREPEND -->
+                    </div>
                     <input type="text" class="form-control" name="Username" id="username" value="">
-                  </div> <!-- END INPUT GROUP -->
-                </div> <!-- END FORM GROUP -->
+                  </div>
+                </div>
                 <div class="form-group">
                   <label for="password"><span class="FieldInfo">Password:</span></label>
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text text-white bg-info"> <i class="fas fa-lock"></i> </span>
-                    </div> <!-- END INPUT GROUP PREPEND -->
+                    </div>
                     <input type="password" class="form-control" name="Password" id="password" value="">
-                  </div> <!-- END INPUT GROUP -->
-                </div> <!-- END FORM GROUP -->
-                <button type="submit" name="submit" class="btn btn-success btn-block">
-                  <i class="fas fa-check"></i> Login
-                </button>
-              </form> <!-- END FORM -->
-            </div> <!-- END CARD BODY -->
-          </div> <!-- END CARD -->
-        </div> <!-- END OFFSET COL -->
-      </div> <!-- END ROW -->
-    </section> <!-- END MAIN CONTAINER -->
+                  </div>
+                </div>
+                <input type="submit" name="Submit" class="btn btn-info btn-block" value="Login">
+              </form>
 
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+    <!-- Main Area End -->
     <!-- FOOTER -->
-
       <!-- NAVBAR -->
-
       <div style="height:10px; background:#696f72;">
       </div>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+          <a href="#" class="navbar-brand"> JOHNRTHURLBY.INFO</a>
+          <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
+            <span class="navbar-toggler-icon"></span>
+          </button> <!-- END bUTTON -->
+          <div class="collapse navbar-collapse" id="navbarcollapseCMS">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a href="Contact.php" class="nav-link"><i class="fas fa-envelope-square"></i> Contact</a>
+              </li> <!-- END CONTACT ITEM -->
+              <li class="nav-item">
+                <a href="Privacy.php" class="nav-link">Privacy</a>
+              </li> <!-- END PRIVACY ITEM -->
+            </ul> <!-- END UL -->
+            <ul class="navbar-nav ml-auto">
+            </ul> <!-- UL -->
+          </div> <!-- END DIV COLLAPSE -->
+        </div> <!-- END CONTAINER -->
+      </nav> <!-- END HEADER -->
 
       <footer class="bg-dark text-white">
       <div class="container">
         <div class="row">
           <div class="col">
-            <p class="lead text-center">John R. Thurlby | &copy; <span id="year"></span> ----All right Reserved.</p>
+            <p class="lead text-center">John R. Thurlby | <span id="year"></span> &copy; ----All right Reserved.</p>
           </div> <!-- END COL -->
         </div> <!-- END ROW -->
       </div> <!-- END CONTAINER -->
     </footer> <!-- END FOOTER -->
 
     <div style="height:10px; background:#696f72;"></div>
-    <script>   
-      $('#year').text(new Date().getFullYear());
-    </script>   <!-- end script -->
-
+        
   </body>    <!-- END BODY -->
 </html> <!-- END HTML -->

@@ -4,39 +4,40 @@
 <?php
 if(isset($_POST["Submit"])){
   $ReplyDesc = $_POST["ReplyDetails"];
+  $OrigQuestionId = $_POST["OrigQuestId"];
   date_default_timezone_set("America/New_York");
   $CurrentTime=time();
   $DateTime=strftime("%B-%d-%Y %H:%M:%S",$CurrentTime);
 
   if(empty($ReplyDesc)){
     $_SESSION["ErrorMessage"]= "Reply must be filled out";
-    Redirect_to("QuestionDetails.php");
+    Redirect_to("QuestionDetails.php?id=".$OrigQuestionId);
   }elseif (strlen($ReplyDesc) < 5) {
     $_SESSION["ErrorMessage"]= "Reply should be greater than 4 characters";
-    Redirect_to("QuestionDetails.php");
+    Redirect_to("QuestionDetails.php?id=".$OrigQuestionId);
   }elseif (strlen($ReplyDesc) > 2000) {
     $_SESSION["ErrorMessage"]= "Reply should be less than than 2000 characters";
-    Redirect_to("QuestionDetails.php");
+    Redirect_to("QuestionDetails.php?id=".$OrigQuestionId);
   }else{
     global $ConnectingDB;
-    $sql = "INSERT INTO answer(replied,question_id,answer_detail,datetime,user_id,numberlike)";
-    $sql .= "VALUES(:replied,:questId,:answerDetail,:dateTime,:userId,:numberlike)";
+    $sql = "INSERT INTO answer(replied,question_id,answer_detail,dateadded,user_id,numberlike)";
+    $sql .= "VALUES(:reply,:questId,:ansDetail,:dateTimeAdded,:userAdd,:liked)";
     $stmt = $ConnectingDB->prepare($sql);
-    $stmt -> bindValue(':replied',0);
-    $stmt -> bindValue(':questId',$QuestionId);
-    $stmt -> bindValue(':answerDetail',$ReplyDesc);
-    $stmt -> bindValue(':dateTime',$DateTime);
-    $stmt -> bindValue(':userId',$QuestUserId);
-    $stmt -> bindValue(':numberlike',0);
+    $stmt -> bindValue(':reply',0);
+    $stmt -> bindValue(':questId',$OrigQuestionId);
+    $stmt -> bindValue(':ansDetail',$ReplyDesc);
+    $stmt -> bindValue(':dateTimeAdded',$DateTime);
+    $stmt -> bindValue(':userAdd',5);
+    $stmt -> bindValue(':liked',0);
 
     $Execute=$stmt->execute();
 
     if($Execute){
       $_SESSION["SuccessMessage"]="Reply added Successfully";
-      Redirect_to("QuestionDetails.php");
+      Redirect_to("QuestionDetails.php?id=".$OrigQuestionId);
     }else {
       $_SESSION["ErrorMessage"]= "Something went wrong. Try Again !";
-      Redirect_to("QuestionDetails.php");
+      Redirect_to("QuestionDetails.php?id=".$OrigQuestionId);
     }
   }
   } //Ending of Submit Button If-Condition
@@ -87,7 +88,11 @@ if(isset($_POST["Submit"])){
                 <div class="row">
                   <div class="col-lg-6 offset-lg-3 mb-2">
                   <?php
+                    if (isset($_GET["id"])){
+
                       $SearchQueryParameter = $_GET["id"];
+                      $OrigQuestion = $SearchQueryParameter;
+
                       global   $ConnectingDB;
                       $sql    =  "SELECT * FROM question WHERE question_id = $SearchQueryParameter";
                       $stmt   =  $ConnectingDB->prepare($sql);
@@ -99,14 +104,15 @@ if(isset($_POST["Submit"])){
                           $QuestHead        = $DataRows["heading"];
                           $QuestDetail      = $DataRows["question_detail"];
                           $QuestDateTime    = $DataRows["dateadded"];
-                          $QuestUserId      = $DataRows["user_id"];
+                          $QuestUser        = $DataRows["user_id"];
                           $QuestSubTopicId  = $DataRows["subtopic_id"];
                           $QuestViews       = $DataRows["views"];
                         }
                       }else {
                         $_SESSION["ErrorMessage"]="Bad Request !!";
-                        Redirect_to("QuestionDetails.php");
+                        Redirect_to("QuestionDetails.php?id=".$SearchQueryParameter);
                       }
+                    }
                     ?>
                     <div class="card-header">
                       <h1 class="text-center"><?php echo $QuestHead; ?></h1>
@@ -123,7 +129,7 @@ if(isset($_POST["Submit"])){
                       </thead>
                       
                       <?php 
-                        $Found_Name = GetForumUserName($QuestUserId); 
+                        $Found_Name = GetForumUserName($QuestUser); 
                         if ($Found_Name) {
                           $QuestUserName = $Found_Name["username"];
                         }
@@ -175,7 +181,7 @@ if(isset($_POST["Submit"])){
             $SearchQueryParameter = $_GET["id"];
             global   $ConnectingDB;
             $QuestionId = $SearchQueryParameter;
-            $sql    =  "SELECT * FROM answer WHERE question_id = $SearchQueryParameter ORDER BY datetime ASC";
+            $sql    =  "SELECT * FROM answer WHERE question_id = $SearchQueryParameter ORDER BY dateadded ASC";
             $stmt   =  $ConnectingDB->prepare($sql);
             $stmt   -> execute();
             $Result = $stmt->rowcount();
@@ -219,6 +225,7 @@ if(isset($_POST["Submit"])){
             <h1 class="text-center">Add a Reply</h1>
           </div>
           <div class="card-body bg-dark">
+            <input type="hidden" id="OrigQuestId" name="OrigQuestId" value="<?php echo $OrigQuestion; ?>">
             <div class="form-group">
               <label for="title"> <span class="FieldInfo"> Reply: </span></label>
               <input class="form-control" type="text" name="ReplyDetails" id="title" placeholder="Reply" value="">

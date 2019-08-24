@@ -6,42 +6,36 @@
   if (isset($_POST["Submit"]))
   {
     $UserNme    = $_POST['Username'];
-    $PassWrd    = $_POST['Password'];
-    $RePass     = $_POST['RePassword'];
     $UserEmail  = $_POST['Email'];
 
     date_default_timezone_set("America/New_York");
     $CurrentTime=time();
     $DateTime=strftime("%B-%d-%Y %H:%M:%S",$CurrentTime);
 
-    if(empty($UserNme)||empty($PassWrd)||empty($RePass)){
+    if(empty($UserNme)||empty($UserEmail)){
       $_SESSION["ErrorMessage"] = "All fields must be filled out correctly";
-      Redirect_to("Forumregister.php");
-    } elseif (strlen($PassWrd)<8) {
-        $_SESSION["ErrorMessage"] = "Password should be greater than 7 characters";
-        Redirect_to("Forumregister.php");
-    } elseif (CheckForumUserExists($UserNme)) {
-      $_SESSION["ErrorMessage"] = "Username Exists. Try Another One! ";
-      Redirect_to("Forumregister.php");
-    } else {  
+      Redirect_to("Subscription.php");
+    } elseif (strlen($UserEmail)<8) {
+        $_SESSION["ErrorMessage"] = "Email should be greater than 7 characters";
+        Redirect_to("Subscription.php");
+    } 
+    else {  
       global $ConnectingDB;
-      $sql = "INSERT INTO user(username,password,user_acc_active,e_mail,date_added,last_login)";
-      $sql .= "VALUES(:userName,:passWord,:accntActive,:emailUser,:dateAdd,:lastIn)";
+      $sql = "INSERT INTO subscription(subscriber_name,sub_email,dateadded,active_sub)";
+      $sql .= "VALUES(:userName,:emailUser,:dateAdd,:accntActive)";
       $stmt = $ConnectingDB->prepare($sql);
       $stmt->bindValue(':userName',$UserNme);
-      $stmt->bindValue(':passWord',$PassWrd);
-      $stmt->bindValue(':accntActive',1);
       $stmt->bindValue(':emailUser',$UserEmail);
       $stmt->bindValue(':dateAdd',$DateTime);
-      $stmt->bindValue(':lastIn',$DateTime);
+      $stmt->bindValue(':accntActive',1);
 
       $Execute=$stmt->execute();
       if($Execute){
         $_SESSION["SuccessMessage"]="Username " .$UserNme." registered successfully";
-        Redirect_to("Topics.php");
+        Redirect_to("Blog.php");
       }else {
         $_SESSION["ErrorMessage"]= "Something went wrong. Try Again !";
-        Redirect_to("Forumregister.php");
+        Redirect_to("Subscription.php");
       }
     }}
     
@@ -65,7 +59,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <link rel="stylesheet" href="Css/Styles.css">
     
-    <title>John Thurlby Forum</title>
+    <title>John Thurlby Blog</title>
 
   </head>  <!-- end head -->
 <body>
@@ -84,7 +78,7 @@
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-            <h1 class="text-center"><i  style="color:#696f72;"></i>Nerdy Techie Forum</h1>
+            <h1 class="text-center"><i  style="color:#696f72;"></i>Nerdy Techie Blog</h1>
           </div> <!-- END CONTAINER -->
         </div> <!-- END COL -->
       </div> <!-- END ROW -->
@@ -98,23 +92,15 @@
       echo ErrorMessage();
       echo SuccessMessage();
       ?>
-      <form class="" action="Forumregister.php" method="post">
+      <form class="" action="Subscription.php" method="post">
         <div class="card bg-secondary text-light mb-3">
           <div class="card-header">
-            <h1 class="text-center">Register for the Forum</h1>
+            <h1 class="text-center">Subscribe to the Blog</h1>
           </div>
           <div class="card-body bg-dark">
             <div class="form-group">
               <label for="title"> <span class="FieldInfo"> User Name: </span></label>
               <input class="form-control" type="text" name="Username" id="title" placeholder="User Name" value="">
-            </div>
-            <div class="form-group">
-              <label for="title"> <span class="FieldInfo"> Password: </span></label>
-              <input class="form-control" type="password" name="Password" id="title" placeholder="Password" value="">
-            </div>
-            <div class="form-group">
-              <label for="title"> <span class="FieldInfo"> Re-enter Password: </span></label>
-              <input class="form-control" type="password" name="RePassword" id="title" placeholder="Verify Password" value="">
             </div>
             <div class="form-group">
               <label for="title"> <span class="FieldInfo"> Email: </span></label>
@@ -123,7 +109,7 @@
             <div class="row">
               <div class="col-lg-6 offset-lg-3 mb-2">
                 <button type="submit" name="Submit" class="btn btn-success btn-block">
-                  <i class="fas fa-check"></i> Register
+                  <i class="fas fa-check"></i> Subscribe
                 </button>
               </div>
             </div>

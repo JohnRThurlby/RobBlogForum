@@ -209,16 +209,9 @@
               <h2 class="lead text-center">Forum</h2>
             </div>
             <div class="card-body">
-              <a href="Forumregister.php" target="_blank">  <h6>Join the forum</h6> </a>
-              <a href="Forumlogin.php" target="_blank">  <h6>Log into the Forum</h6> </a>
-
-              <button type="button" class="btn btn-danger btn-block text-center text-white mb-4" name="button">Login</button>
-              <div class="input-group mb-3">
-                <input type="text" class="form-control" name="" placeholder="Enter your email"value="">
-                <div class="input-group-append">
-                  <button type="button" class="btn btn-primary btn-sm text-center text-white" name="button">Subscribe Now</button>
-                </div>
-              </div>
+              <a href="Forumregister.php" target="_blank">  <h6>Join the forum</h6> </a><br>
+              <a href="Forumlogin.php" target="_blank">  <h6>Log into the Forum</h6> </a><br>
+              <a href="Subscription.php" target="_blank">  <h6>Subscribe to the Blog</h6> </a>
             </div>
           </div>
           <br>

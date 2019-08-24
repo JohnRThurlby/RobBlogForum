@@ -9,7 +9,7 @@ if(isset($_GET["id"])){
   $sql = "UPDATE answer SET numberlike=(@cur_value := numberlike) + 1 WHERE answer_id='$SearchQueryParameter'";
   $Execute = $ConnectingDB->query($sql);
   if ($Execute) {
-    $_SESSION["SuccessMessage"]="Like Successfully! ";
+    $_SESSION["SuccessMessage"]="Like Successful! ";
     Redirect_to("QuestionDetails.php?id=$QuestionId");
     // 
   }else {
