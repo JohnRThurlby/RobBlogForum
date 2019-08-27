@@ -55,12 +55,16 @@
           </tr>
         </thead>
       <?php
+      $UserId = $_SESSION["UserId"];
+
       $ConnectingDB;
-      $sql = "SELECT * FROM chatmaster WHERE user_id_from = 5 ORDER BY user_id_to ASC";
+      $sql = "SELECT * FROM chatmaster WHERE user_id_from = $UserId ORDER BY user_id_to ASC";
       $stmt   =  $ConnectingDB->prepare($sql);
       $stmt   -> execute();
       $Result = $stmt->rowcount();
+
       $Execute = $ConnectingDB->query($sql); 
+
       while ($DataRows = $Execute->fetch()) {
         $UserMsgTo = $DataRows["user_id_to"];
         $NumMsgs   = $DataRows["chatmessages"];
@@ -82,9 +86,9 @@
           <td><?php echo htmlentities($NumMsgs); ?></td>
           <td><?php echo htmlentities(0); ?></td>
           <td style="min-width:100px;"> <a class="btn btn-primary"href="ChatMessages.php?id=<?php echo $UserMsgTo; ?>" target="_blank">Chat</a> </td>
-          <td style="min-width:100px;"> <a class="btn btn-primary"href="Deletemessages.php?id=<?php echo $ChatId; ?>">Delete Chat</a> </td>
-          <td style="min-width:100px;"> <a class="btn btn-primary"href="Blockuser.php?id=<?php echo $UserMsgTo; ?>">Block</a> </td>
-          <td style="min-width:100px;"> <a class="btn btn-primary"href="ReportUser.php?id=<?php echo $UserMsgTo; ?>">Report</a> </td>
+          <td style="min-width:100px;"> <a class="btn btn-primary"href="Deletemessages.php?id=<?php echo $ChatId; ?>&name=<?php echo $UserChatTo; ?>">Delete Chat</a> </td>
+          <td style="min-width:100px;"> <a class="btn btn-primary"href="Blockuser.php?id=<?php echo $UserMsgTo; ?>&name=<?php echo $UserChatTo; ?>">Block</a> </td>
+          <td style="min-width:100px;"> <a class="btn btn-primary"href="ReportUser.php?id=<?php echo $UserMsgTo; ?>&name=<?php echo $UserChatTo; ?>">Report</a> </td>
       </tbody>
       <?php } ?>
       </table>

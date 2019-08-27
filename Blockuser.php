@@ -11,6 +11,8 @@ if(isset($_GET["id"])){
  
   $UserId = $_SESSION["UserId"];
   $BlockedUserId = $_GET["id"];
+  $BlockedUserName = $_GET["name"];
+
  
   global $ConnectingDB;
   $sql = "INSERT INTO blockchat(user_id,blocked_user,dateblocked)";
@@ -22,7 +24,7 @@ if(isset($_GET["id"])){
   
   $Execute=$stmt->execute();
   if($Execute){
-    $_SESSION["SuccessMessage"]="User: " .$BlockedUserId." blocked Successfully";
+    $_SESSION["SuccessMessage"]="User: " .$BlockedUserName." blocked Successfully";
     Redirect_to("Chat.php");
   }else {
     $_SESSION["ErrorMessage"]= "Something went wrong. Try Again !";

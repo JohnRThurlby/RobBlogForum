@@ -10,6 +10,8 @@ if(isset($_GET["id"])){
   $DateTime=strftime("%B-%d-%Y %H:%M:%S",$CurrentTime);  
  
   $ChatId = $_GET["id"];
+  $DeletedUserMsgs = $_GET["name"];
+
  
   global $ConnectingDB;
   $sql = "DELETE FROM chat WHERE chat_id = $ChatId";
@@ -23,7 +25,7 @@ if(isset($_GET["id"])){
   
     $Execute=$stmt->execute();
     if($Execute){
-      $_SESSION["SuccessMessage"]="Messages deleted Successfully";
+      $_SESSION["SuccessMessage"]= $DeletedUserMsgs ." messages deleted Successfully";
       Redirect_to("Chat.php");
     }
     else {
