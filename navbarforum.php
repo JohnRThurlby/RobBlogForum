@@ -18,6 +18,9 @@
           <a href="Questions.php" class="nav-link"><i class="fas fa-envelope-square"></i> Questions</a>
         </li>
         <li class="nav-item">
+          <a href="Chat.php" class="nav-link">Chat</a>
+        </li>
+        <li class="nav-item">
           <a href="About.php" class="nav-link">About</a>
         </li>
       </ul>
