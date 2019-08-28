@@ -15,9 +15,6 @@
           <a href="Blog.php?page=1" class="nav-link">Blog</a>
         </li>
         <li class="nav-item">
-          <a href="Features.php" class="nav-link">Features</a>
-        </li>
-        <li class="nav-item">
           <a href="Contactblog.php" class="nav-link"><i class="fas fa-envelope-square"></i> Contact</a>
         </li>
         <li class="nav-item">

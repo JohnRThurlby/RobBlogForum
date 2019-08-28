@@ -31,10 +31,10 @@
 
       $Execute=$stmt->execute();
       if($Execute){
-        $_SESSION["SuccessMessage"]="Username " .$UserNme." registered successfully";
+        $_SESSION["SuccessMessage"] = $UserNme." subscribed successfully";
         Redirect_to("Blog.php");
       }else {
-        $_SESSION["ErrorMessage"]= "Something went wrong. Try Again !";
+        $_SESSION["ErrorMessage"] = "Something went wrong. Try Again !";
         Redirect_to("Subscription.php");
       }
     }}
@@ -64,18 +64,12 @@
   </head>  <!-- end head -->
 <body>
   
-    <!-- HEADER -->
-    <header class="bg-dark text-white py-3">
-      <div class="container">
-        <div class="row">
-        </div>
-      </div>
-    </header>
-    <!-- HEADER END -->
+    <!-- NAVBAR -->
+      <?php require("navbarblog.php");?> 
 
         <!-- START HEADER -->
         <header class="bg-dark text-white py-5">
-      <div class="container">
+        <div class="container">
         <div class="row">
           <div class="col-md-12">
             <h1 class="text-center"><i  style="color:#696f72;"></i>Nerdy Techie Blog</h1>

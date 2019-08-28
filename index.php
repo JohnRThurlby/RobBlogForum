@@ -1,45 +1,6 @@
 <?php require_once("Includes/DB.php"); ?>
 <?php require_once("Includes/Functions.php"); ?>
 <?php require_once("Includes/Sessions.php"); ?>
-<?php $SearchQueryParameter = $_GET["id"]; ?>
-<?php
-if(isset($_POST["Submit"])){
-  $Name    = $_POST["CommenterName"];
-  $Email   = $_POST["CommenterEmail"];
-  $Comment = $_POST["CommenterThoughts"];
-  date_default_timezone_set("America/New_York");
-  $CurrentTime=time();
-  $DateTime=strftime("%B-%d-%Y %H:%M:%S",$CurrentTime);
-
-  if(empty($Name)||empty($Email)||empty($Comment)){
-    $_SESSION["ErrorMessage"]= "All fields must be filled out";
-    Redirect_to("FullPost.php?id={$SearchQueryParameter}");
-  }elseif (strlen($Comment)>500) {
-    $_SESSION["ErrorMessage"]= "Comment length should be less than 500 characters";
-    Redirect_to("FullPost.php?id={$SearchQueryParameter}");
-  }else{
-    // Query to insert comment in DB When everything is fine
-    global $ConnectingDB;
-    $sql  = "INSERT INTO comments(datetime,name,email,comment,approvedby,status,post_id)";
-    $sql .= "VALUES(:dateTime,:name,:email,:comment,'Pending','OFF',:postIdFromURL)";
-    $stmt = $ConnectingDB->prepare($sql);
-    $stmt -> bindValue(':dateTime',$DateTime);
-    $stmt -> bindValue(':name',$Name);
-    $stmt -> bindValue(':email',$Email);
-    $stmt -> bindValue(':comment',$Comment);
-    $stmt -> bindValue(':postIdFromURL',$SearchQueryParameter);
-    $Execute = $stmt -> execute();
-    //var_dump($Execute);
-    if($Execute){
-      $_SESSION["SuccessMessage"]="Comment Submitted Successfully";
-      Redirect_to("FullPost.php?id={$SearchQueryParameter}");
-    }else {
-      $_SESSION["ErrorMessage"]="Something went wrong. Try Again !";
-      Redirect_to("FullPost.php?id={$SearchQueryParameter}");
-    }
-  }
-} //Ending of Submit Button If-Condition
- ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,14 +34,14 @@ if(isset($_POST["Submit"])){
 
   </head>  <!-- end head -->
 
-
 <body>
-  <!-- NAVBAR -->
-  <?php require("navbarblog.php");?> 
+    <!-- NAVBAR -->
+    <?php require("navbarblog.php");?> 
 
     <!-- HEADER -->
     <div class="container">
       <div class="row mt-4">
+
         <!-- Main Area Start-->
         <div class="col-sm-8 ">
           <h2>Nerdy Techie Blog in PHP by John R. Thurlby</h2>
@@ -101,22 +62,28 @@ if(isset($_POST["Submit"])){
             $stmt = $ConnectingDB->prepare($sql);
             $stmt->bindValue(':search','%'.$Search.'%');
             $stmt->execute();
+          }// Query When Pagination is Active i.e Blog.php?page=1
+          elseif (isset($_GET["page"])) {
+            $Page = $_GET["page"];
+            if($Page==0||$Page<1){
+            $ShowPostFrom=0;
+          }else{
+            $ShowPostFrom=($Page*5)-5;
           }
+            $sql ="SELECT * FROM posts ORDER BY id desc LIMIT $ShowPostFrom,5";
+            $stmt=$ConnectingDB->query($sql);
+          }
+          // Query When Category is active in URL Tab
+          elseif (isset($_GET["category"])) {
+            $Category = $_GET["category"];
+            $sql = "SELECT * FROM posts WHERE category='$Category' ORDER BY id desc";
+            $stmt=$ConnectingDB->query($sql);
+          }
+
           // The default SQL query
           else{
-            $PostIdFromURL = $_GET["id"];
-            if (!isset($PostIdFromURL)) {
-              $_SESSION["ErrorMessage"]="Bad Request !";
-              Redirect_to("Blog.php?page=1");
-            }
-            $sql  = "SELECT * FROM posts  WHERE id= '$PostIdFromURL'";
+            $sql  = "SELECT * FROM posts ORDER BY id desc LIMIT 0,3";
             $stmt =$ConnectingDB->query($sql);
-            $Result=$stmt->rowcount();
-            if ($Result!=1) {
-              $_SESSION["ErrorMessage"]="Bad Request !";
-              Redirect_to("Blog.php?page=1");
-            }
-
           }
           while ($DataRows = $stmt->fetch()) {
             $PostId          = $DataRows["id"];
@@ -128,80 +95,65 @@ if(isset($_POST["Submit"])){
             $PostDescription = $DataRows["post"];
           ?>
           <div class="card">
-            <img src="Uploads/<?php echo htmlentities($Image); ?>" style="max-height:300px;" class="img-fluid card-img-top" />
+            <img src="Uploads/<?php echo htmlentities($Image); ?>" style="max-height:450px;" class="img-fluid card-img-top" />
             <div class="card-body">
               <h4 class="card-title"><?php echo htmlentities($PostTitle); ?></h4>
-              <small class="text-muted">Category: <span class="text-dark"> <a href="Blog.php?category=<?php echo htmlentities($Category); ?>"> <?php echo htmlentities($Category); ?> </a></span> & Added by <span class="text-dark"> <a href="Profile.php?username=<?php echo htmlentities($Admin); ?>"> <?php echo htmlentities($Admin); ?></a></span> On <span class="text-dark"><?php echo htmlentities($DateTime); ?></span></small>
-            <hr>
+              <small class="text-muted">Category: <span class="text-dark"> <a href="Blog.php?category=<?php echo htmlentities($Category); ?>"> <?php echo htmlentities($Category); ?> </a></span> & Written by <span class="text-dark"> <a href="Profile.php?username=<?php echo htmlentities($Admin); ?>"> <?php echo htmlentities($Admin); ?></a></span> On <span class="text-dark"><?php echo htmlentities($DateTime); ?></span></small>
+              <span style="float:right;" class="badge badge-dark text-light">Comments:
+                 <?php echo ApproveCommentsAccordingtoPost($PostId);?>
+              </span>
+              <hr>
               <p class="card-text">
-                <?php echo nl2br($PostDescription); ?></p>
+                <?php if (strlen($PostDescription)>150) { $PostDescription = substr($PostDescription,0,150)."...";} echo htmlentities($PostDescription); ?></p>
+              <a href="FullPost.php?id=<?php echo $PostId; ?>" style="float:right;">
+                <span class="btn btn-info">Read More &rang;&rang; </span>
+              </a>
             </div>
           </div>
           <br>
           <?php   } ?>
-          <!-- Comment Part Start -->
-          <!-- Fetching existing comment START  -->
-          <span class="FieldInfo">Comments</span>
-          <br><br>
-        <?php
-        global $ConnectingDB;
-        $sql  = "SELECT * FROM comments
-         WHERE post_id='$SearchQueryParameter' AND status='ON'";
-        $stmt =$ConnectingDB->query($sql);
-        while ($DataRows = $stmt->fetch()) {
-          $CommentDate   = $DataRows['datetime'];
-          $CommenterName = $DataRows['name'];
-          $CommentContent= $DataRows['comment'];
-        ?>
-  <div>
-    <div class="media CommentBlock">
-      <img class="d-block img-fluid align-self-start" src="images/comment.png" alt="">
-      <div class="media-body ml-2">
-        <h6 class="lead"><?php echo $CommenterName; ?></h6>
-        <p class="small"><?php echo $CommentDate; ?></p>
-        <p><?php echo $CommentContent; ?></p>
-      </div>
-    </div>
-  </div>
-  <hr>
-  <?php } ?>
-
-        <!--  Fetching existing comment END -->
-
-          <div>
-            <form class="" action="FullPost.php?id=<?php echo $SearchQueryParameter ?>" method="post">
-              <div class="card mb-3">
-                <div class="card-header">
-                  <h5 class="FieldInfo">Share your thoughts about this post</h5>
-                </div>
-                <div class="card-body">
-                  <div class="form-group">
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-user"></i></span>
-                      </div>
-                    <input class="form-control" type="text" name="CommenterName" placeholder="Name" value="">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                      </div>
-                    <input class="form-control" type="text" name="CommenterEmail" placeholder="Email" value="">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <textarea name="CommenterThoughts" class="form-control" rows="6" cols="80"></textarea>
-                  </div>
-                  <div class="">
-                    <button type="submit" name="Submit" class="btn btn-primary">Submit</button>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-            <!-- Comment Part End -->
+          <!-- Pagination -->
+          <nav>
+            <ul class="pagination pagination-lg">
+              <!-- Creating Backward Button -->
+              <?php if( isset($Page) ) {
+                if ( $Page>1 ) {?>
+             <li class="page-item">
+                 <a href="Blog.php?page=<?php  echo $Page-1; ?>" class="page-link">&laquo;</a>
+               </li>
+             <?php } }?>
+            <?php
+            global $ConnectingDB;
+            $sql           = "SELECT COUNT(*) FROM posts";
+            $stmt          = $ConnectingDB->query($sql);
+            $RowPagination = $stmt->fetch();
+            $TotalPosts    = array_shift($RowPagination);
+            // echo $TotalPosts."<br>";
+            $PostPagination=$TotalPosts/5;
+            $PostPagination=ceil($PostPagination);
+            // echo $PostPagination;
+            for ($i=1; $i <=$PostPagination ; $i++) {
+              if( isset($Page) ){
+                if ($i == $Page) {  ?>
+              <li class="page-item active">
+                <a href="Blog.php?page=<?php  echo $i; ?>" class="page-link"><?php  echo $i; ?></a>
+              </li>
+              <?php
+            }else {
+              ?>  <li class="page-item">
+                  <a href="Blog.php?page=<?php  echo $i; ?>" class="page-link"><?php  echo $i; ?></a>
+                </li>
+            <?php  }
+          } } ?>
+          <!-- Creating Forward Button -->
+          <?php if ( isset($Page) && !empty($Page) ) {
+            if ($Page+1 <= $PostPagination) {?>
+         <li class="page-item">
+             <a href="Blog.php?page=<?php  echo $Page+1; ?>" class="page-link">&raquo;</a>
+           </li>
+         <?php } }?>
+            </ul>
+          </nav>
         </div>
         <!-- Main Area End-->
 
@@ -268,19 +220,22 @@ if(isset($_POST["Submit"])){
 
         </div>
         <!-- Side Area End -->
+
+
       </div>
 
     </div>
 
     <!-- HEADER END -->
+<br>
 
     <!-- FOOTER -->
     <?php require("footerblog.php");?> 
-    
+
     <script>   
       $('#year').text(new Date().getFullYear());
     </script>   <!-- end script -->
-
+    
   </body>    <!-- END BODY -->
 </html> <!-- END HTML -->
 
