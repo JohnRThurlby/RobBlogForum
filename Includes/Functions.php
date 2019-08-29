@@ -22,8 +22,9 @@ function CheckUserNameExistsOrNot($UserName){
 
 function CheckForumUserExists($UserNme){
   global $ConnectingDB;
-  $sql  = "SELECT * FROM user WHERE username='$UserNme'";
+  $sql  = "SELECT * FROM user WHERE username=:userName";
   $stmt = $ConnectingDB->prepare($sql);
+  $stmt->bindValue(':userName',$UserNme);
   $stmt->execute();
   $Result = $stmt->rowcount();
   if ($Result==1) {
@@ -62,7 +63,7 @@ function GetSubTopicName($SubId){
 
 function Login_Attempt($UserName,$Password){
   global $ConnectingDB;
-  $sql = "SELECT * FROM admins WHERE username=:userName AND password=:passWord LIMIT 1";
+  $sql = "SELECT * FROM admins WHERE username=:userName AND passwrd=:passWord LIMIT 1";
   $stmt = $ConnectingDB->prepare($sql);
   $stmt->bindValue(':userName',$UserName);
   $stmt->bindValue(':passWord',$Password);

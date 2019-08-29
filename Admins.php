@@ -11,6 +11,9 @@ if(isset($_POST["Submit"])){
   $ConfirmPassword = $_POST["ConfirmPassword"];
   $Admin           = $_SESSION["UserName"];
   $FormatdateTime  = ReformDateTime();
+  $Headline        = " ";
+  $Bio             = " ";
+  $Image           = " ";
   
   if(empty($UserName)||empty($Password)||empty($ConfirmPassword)){
     $_SESSION["ErrorMessage"]= "All fields must be filled out";
@@ -26,14 +29,17 @@ if(isset($_POST["Submit"])){
     Redirect_to("Admins.php");
   }else{
     // Query to insert new admin in DB When everything is fine
-    $ConnectingDB;
-    $sql = "INSERT INTO admins(datetime,username,password,aname,addedby)";
-    $sql .= "VALUES(:dateTime,:userName,:password,:aName,:adminName)";
+    global $ConnectingDB;
+    $sql = "INSERT INTO admins(dateadded,username,passwrd,aname,aheadline,abio,aimage,addedby)";
+    $sql .= "VALUES(:dateTime,:userName,:passWord,:aName,:headLine,:bIo,:iMage,:adminName)";
     $stmt = $ConnectingDB->prepare($sql);
     $stmt->bindValue(':dateTime',$FormatdateTime);
     $stmt->bindValue(':userName',$UserName);
-    $stmt->bindValue(':password',$Password);
+    $stmt->bindValue(':passWord',$Password);
     $stmt->bindValue(':aName',$Name);
+    $stmt->bindValue(':headLine',$Headline);
+    $stmt->bindValue(':bIo',$Bio);
+    $stmt->bindValue(':iMage',$Image);
     $stmt->bindValue(':adminName',$Admin);
     $Execute=$stmt->execute();
     if($Execute){
@@ -41,7 +47,7 @@ if(isset($_POST["Submit"])){
       Redirect_to("Admins.php");
     }else {
       $_SESSION["ErrorMessage"]= "Something went wrong. Try Again !";
-      Redirect_to("admins.php");
+      Redirect_to("Admins.php");
     }
   }
 } //Ending of Submit Button If-Condition
@@ -109,7 +115,7 @@ if(isset($_POST["Submit"])){
       $SrNo = 0;
       while ($DataRows=$Execute->fetch()) {
         $AdminId = $DataRows["id"];
-        $DateTime = $DataRows["datetime"];
+        $DateTime = $DataRows["dateadded"];
         $AdminUsername = $DataRows["username"];
         $AdminName= $DataRows["aname"];
         $AddedBy = $DataRows["addedby"];
@@ -156,9 +162,7 @@ if(isset($_POST["Submit"])){
             </div>
             <div class="row">
               <div class="col-lg-6 offset-lg-3 mb-2">
-                <button type="submit" name="Submit" class="btn btn-success btn-block">
-                  <i class="fas fa-check"></i> Publish
-                </button>
+                <input type="submit" name="Submit" class="btn btn-info btn-block" value="Publish">
               </div>
             </div>
           </div>

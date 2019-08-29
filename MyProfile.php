@@ -121,15 +121,15 @@ if (strlen($AHeadline)>30) {
           </div>
           <div class="card-body">
             <div class="form-group">
-               <input class="form-control" type="text" name="Name" id="title" placeholder="Your name" value="">
+               <input class="form-control" type="text" name="Name" id="title" placeholder="<?php echo $ExistingName; ?>" value="<?php echo $ExistingName; ?>">
             </div>
             <div class="form-group">
-               <input class="form-control" type="text" id="title" placeholder="Headline" name="Headline">
+               <input class="form-control" type="text" name="Headline" id="title" placeholder="<?php echo $ExistingHeadline; ?>" value="<?php echo $ExistingHeadline; ?>">
                <small class="text-muted"> Add a professional headline like, 'Engineer' at XYZ or 'Architect' </small>
                <span class="text-danger">Not more than 30 characters</span>
             </div>
             <div class="form-group">
-              <textarea  placeholder="Bio" class="form-control" id="Post" name="Bio" rows="8" cols="80"></textarea>
+              <textarea  placeholder="<?php echo $ExistingBio; ?>" value="<?php echo $ExistingBio; ?>" class="form-control" id="Post" name="Bio" rows="8" cols="80"></textarea>
             </div>
 
             <div class="form-group">
@@ -140,9 +140,7 @@ if (strlen($AHeadline)>30) {
             </div>
             <div class="row">
               <div class="col-lg-6 offset-lg-3 mb-2">
-                <button type="submit" name="Submit" class="btn btn-success btn-block">
-                  <i class="fas fa-check"></i> Publish
-                </button>
+                <input type="submit" name="Submit" class="btn btn-info btn-block" value="Update">
               </div>
             </div>
           </div>

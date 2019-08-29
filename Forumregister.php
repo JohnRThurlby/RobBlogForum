@@ -122,9 +122,8 @@
             </div>
             <div class="row">
               <div class="col-lg-6 offset-lg-3 mb-2">
-                <button type="submit" name="Submit" class="btn btn-success btn-block">
-                  <i class="fas fa-check"></i> Register
-                </button>
+                <input type="submit" name="Submit" class="btn btn-info btn-block" value="Register">
+
               </div>
             </div>
           </div>

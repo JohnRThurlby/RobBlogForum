@@ -76,7 +76,7 @@ if (isset($_POST["Submit"])) {
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-            <h1 class="text-center"><i  style="color:#696f72;"></i>My First Blog Page in PHP</h1>
+            <h1 class="text-center"><i  style="color:#696f72;"></i>Blog</h1>
           </div> <!-- END CONTAINER -->
         </div> <!-- END COL -->
       </div> <!-- END ROW -->
@@ -92,7 +92,8 @@ if (isset($_POST["Submit"])) {
           ?>
           <div class="card bg-secondary text-light">
             <div class="card-header">
-              <h4>Wellcome Back !</h4>
+              <h4>Welcome Back!</h4>
+              <h4>Administrator Login only</h4>
               </div>
               <div class="card-body bg-dark">
               <form class="" action="Login.php" method="post">
