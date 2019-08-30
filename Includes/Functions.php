@@ -90,6 +90,20 @@ function ForumLogin_Attempt($UserName,$PassWord){
   }
 }
 
+function ForumAdminLogin_Attempt($UserName,$PassWord){
+  $PassEncrypt = sha1($PassWord);
+  global $ConnectingDB;
+  $sql = "SELECT * FROM user WHERE username='$UserName' AND password='$PassWord' AND admin_acct";
+  $stmt = $ConnectingDB->prepare($sql);
+  $stmt->execute();
+  $Result = $stmt->rowcount();
+  if ($Result==1) {
+    return $Found_Account=$stmt->fetch();
+  }else {
+    return null;
+  }
+}
+
 function Confirm_Login(){
 if (isset($_SESSION["UserId"])) {
   return true;
@@ -171,6 +185,18 @@ function DisApproveCommentsAccordingtoPost($PostId){
   $RowsTotal = $stmtDisApprove->fetch();
   $Total = array_shift($RowsTotal);
   return $Total;
+}
+
+function UpdateQuestionViews($QuestionId){
+  global $ConnectingDB;
+  $sql = "UPDATE question SET views=(@cur_value := views) + 1 WHERE question_id='$QuestionId'";
+  $Execute = $ConnectingDB->query($sql);
+  if ($Execute) {
+    return true; 
+  }else {
+    $_SESSION["ErrorMessage"]="Something Went Wrong. Try Again !";
+    Redirect_to("QuestionDetails.php?id=$QuestionId");
+  }
 }
 
 function ReformDateTime(){

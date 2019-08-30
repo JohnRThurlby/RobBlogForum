@@ -21,7 +21,7 @@
           <a href="Chat.php" class="nav-link">Chat</a>
         </li>
         <li class="nav-item">
-          <a href="About.php" class="nav-link">About</a>
+          <a href="ForumAdminlogin.php" class="nav-link">Admin</a>
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">

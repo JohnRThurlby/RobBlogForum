@@ -209,8 +209,7 @@
               <h2 class="lead text-center">Forum</h2>
             </div>
             <div class="card-body">
-              <a href="Forumregister.php" target="_blank">  <h6>Join the forum</h6> </a><br>
-              <a href="Forumlogin.php" target="_blank">  <h6>Log into the Forum</h6> </a><br>
+              <a href="Forumlogin.php" target="_blank">    <h6>Login/Register for the Forum</h6> </a><br>
               <a href="Subscription.php" target="_blank">  <h6>Subscribe to the Blog</h6> </a>
             </div>
           </div>

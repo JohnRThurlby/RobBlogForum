@@ -106,7 +106,7 @@ if(isset($_POST["Submit"])){
                           $QuestDateTime    = $DataRows["dateadded"];
                           $QuestUser        = $DataRows["user_id"];
                           $QuestSubTopicId  = $DataRows["subtopic_id"];
-                          $QuestViews       = $DataRows["views"];
+                          $QuestViews       = $DataRows["views"] + 1;
                         }
                       }else {
                         $_SESSION["ErrorMessage"]="Bad Request !!";
@@ -118,6 +118,7 @@ if(isset($_POST["Submit"])){
                       <h1 class="text-center"><?php echo $QuestHead; ?></h1>
                     </div>
                     <h5 class="text-center"><?php echo $QuestDetail; ?></h5><br>
+                    <?php UpdateQuestionViews($OrigQuestion) ?>
                     <table class="table table-striped table-hover">
                       <thead class="thead-dark">
                         <tr>
@@ -150,7 +151,7 @@ if(isset($_POST["Submit"])){
                           <td><?php echo htmlentities($QuestDateTime); ?></td>
                           <td><?php echo htmlentities($QuestUserName); ?></td> 
                           <td><?php echo htmlentities($QuestSubTopicName); ?></td>
-                          <td><?php echo htmlentities($QuestViews); ?></td>
+                          <td><?php echo htmlentities($QuestViews++); ?></td>
                         </tr>
                       </tbody>
                     </table>
@@ -208,7 +209,7 @@ if(isset($_POST["Submit"])){
                 <td><?php echo htmlentities($ReplyUserName); ?></td>
                 <td><?php echo htmlentities($ReplyDateTime); ?></td>
                 <td><?php echo htmlentities($ReplyLike); ?></td>
-                <td style="min-width:100px;"> <a class="btn btn-primary"href="UpdateQuestLike.php?id=<?php echo $AnswerId; ?>&questid=<?php echo $QuestionId;?>" target="_blank">Like?</a> </td>
+                <td style="min-width:100px;"> <a class="btn btn-primary"href="UpdateReplyLike.php?id=<?php echo $AnswerId; ?>&questid=<?php echo $QuestionId;?>" target="_blank">Like?</a> </td>
               </tr>
             </tbody>
           <?php }} ?>

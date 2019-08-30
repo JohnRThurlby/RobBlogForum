@@ -4,10 +4,6 @@
 <?php require_once("Includes/Sessions.php"); ?>
 
 <?php
-// If global session is set, send to topics 
-if(isset($_SESSION["UserId"])){
-  Redirect_to("Topics.php");
-}  // END ISSET SESSION
 
 // If global post is submit, check login 
 
@@ -19,12 +15,12 @@ if (isset($_POST["Submit"]))
 
   if (empty($UserName)||empty($PassWord)) {
     $_SESSION["ErrorMessage"]= "All fields must be filled out";
-    Redirect_to("Forumlogin.php");
+    Redirect_to("ForumAdminlogin.php");
   }    // END IF EITHER EMPTY 
   else 
     {
     // see if user is in DB by calling function
-    $Found_Account=ForumLogin_Attempt($UserName,$PassWord);
+    $Found_Account=ForumAdminLogin_Attempt($UserName,$PassWord);
 
     if ($Found_Account) 
       {
@@ -35,13 +31,13 @@ if (isset($_POST["Submit"]))
       } // END FOUND ACCOUNT
       else
         {
-        Redirect_to("Topics.php");
+        Redirect_to("ForumAdmin.php");
         }  // END ELSE
       }  // END ACCOUNT FOUND
     else 
       {
       $_SESSION["ErrorMessage"]="Incorrect Username/Password";
-      Redirect_to("Forumlogin.php");
+      Redirect_to("ForumAdminlogin.php");
       } // END ELSE
     } // END ELSE
   } // END SUBMIT
@@ -88,6 +84,7 @@ if (isset($_POST["Submit"]))
         <div class="row">
           <div class="col-md-12">
             <h1 class="text-center"><i  style="color:#696f72;"></i>Nerdy Techie Forum</h1>
+            <h3 class="text-center"><i  style="color:#696f72;"></i>Administrator Login only!</h2>
           </div> <!-- END CONTAINER -->
         </div> <!-- END COL -->
       </div> <!-- END ROW -->
@@ -106,12 +103,8 @@ if (isset($_POST["Submit"]))
 
           <div class="card bg-secondary text-light">
 
-            <div class="card-header">
-              <h4>Forum Login</h4>
-            </div> <!-- END CARD HEADER -->
-
             <div class="card-body bg-dark">
-              <form class="" action="Forumlogin.php" method="post">
+              <form class="" action="ForumAdminlogin.php" method="post">
                 <div class="form-group">
                   <label for="username"><span class="FieldInfo">Username:</span></label>
                   <div class="input-group mb-3">
